@@ -1,5 +1,7 @@
 # What is this?
 
+Simple JSON API which is build on top of [Silex](http://silex.sensiolabs.org/) framework.
+
 ## Main points
 * This is just an API, nothing else
 * Only JSON responses from API
