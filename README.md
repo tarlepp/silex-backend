@@ -21,3 +21,12 @@ $ php composer.phar install
 ## Configuration
 
 TODO
+
+## Author
+[Tarmo Leppänen](https://github.com/tarlepp)
+
+## LICENSE
+
+[The MIT License (MIT)](LICENSE)
+
+Copyright (c) 2016 Tarmo Leppänen
