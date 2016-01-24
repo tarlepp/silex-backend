@@ -7,6 +7,7 @@
 namespace App;
 
 use Silex\Application as SilexApplication;
+use Silex\Provider\ValidatorServiceProvider;
 
 /**
  * Class Application
@@ -61,14 +62,17 @@ class Application extends SilexApplication
         /** @noinspection PhpIncludeInspection */
         require $configFile;
 
-        // Register all application routes
-        $this->mount('', new ControllerProvider());
+        // Register all necessary providers
+        $this->applicationRegister();
+
+        // Attach application mount points
+        $this->applicationMount();
     }
 
     /**
      * Getter method for 'rootDir' property.
      *
-     * @return string
+     * @return  string
      */
     public function getRootDir()
     {
@@ -78,10 +82,31 @@ class Application extends SilexApplication
     /**
      * Getter method for 'env' property.
      *
-     * @return string
+     * @return  string
      */
     public function getEnv()
     {
         return $this->env;
+    }
+
+    /**
+     * Method to register all specified providers for application.
+     *
+     * @return  void
+     */
+    private function applicationRegister()
+    {
+        $this->register(new ValidatorServiceProvider());
+    }
+
+    /**
+     * Method to attach main mount point to be handled via ControllerProvider.
+     *
+     * @return  void
+     */
+    private function applicationMount()
+    {
+        // Register all application routes
+        $this->mount('', new ControllerProvider());
     }
 }

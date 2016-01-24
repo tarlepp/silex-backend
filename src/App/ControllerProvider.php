@@ -48,12 +48,8 @@ class ControllerProvider implements ControllerProviderInterface
          */
         $controllers = $this->app['controllers_factory'];
 
-        /**
-         * Mount controllers to specified routes.
-         *
-         * @todo    can this be done automatic?
-         */
-        $this->app->mount('/', new Controllers\IndexController());
+        // Mount controllers to specified routes.
+        $this->mount();
 
         return $controllers;
     }
@@ -90,5 +86,18 @@ class ControllerProvider implements ControllerProviderInterface
 
         // And return JSON output
         return $this->app->json($error, $status);
+    }
+
+    /**
+     * Attach application mount points to specified controllers.
+     *
+     * @todo    can this be done automatic?
+     *
+     * @return  void
+     */
+    private function mount()
+    {
+        $this->app->mount('/', new Controllers\IndexController());
+        $this->app->mount('/auth', new Controllers\AuthController());
     }
 }
