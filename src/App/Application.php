@@ -7,10 +7,14 @@
 namespace App;
 
 use Silex\Application as SilexApplication;
+use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 
 /**
  * Class Application
+ *
+ * Main application class that is used to run application. Class bootstraps application all providers, mount routes,
+ * etc.
  *
  * @category    Core
  * @package     App
@@ -97,6 +101,7 @@ class Application extends SilexApplication
     private function applicationRegister()
     {
         $this->register(new ValidatorServiceProvider());
+        $this->register(new MonologServiceProvider(), $this->getMonologServiceProviderOptions());
     }
 
     /**
@@ -108,5 +113,17 @@ class Application extends SilexApplication
     {
         // Register all application routes
         $this->mount('', new ControllerProvider());
+    }
+
+    /**
+     * Getter method for MonologServiceProvider options.
+     *
+     * @return array
+     */
+    private function getMonologServiceProviderOptions()
+    {
+        return [
+            'monolog.logfile' => $this->rootDir . '/var/logs/app.log',
+        ];
     }
 }

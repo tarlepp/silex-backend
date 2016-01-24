@@ -20,3 +20,6 @@ nbproject
 # Composer specified files + folders
 composer.phar
 /vendor/
+
+# App specified files + folders
+/var/
