@@ -39,12 +39,21 @@ class ControllerProvider implements ControllerProviderInterface
         $this->app = $app;
 
         // Set error handling globally
-        $app->error([$this, 'error']);
+        $this->app->error([$this, 'error']);
 
-        // Get application current controllers
+        /**
+         * Get application current controllers
+         *
+         * @var ControllerCollection $controllers
+         */
         $controllers = $this->app['controllers_factory'];
 
-        // TODO create logic to inject all classes with specified routes here
+        /**
+         * Mount controllers to specified routes.
+         *
+         * @todo    can this be done automatic?
+         */
+        $this->app->mount('/', new Controllers\IndexController());
 
         return $controllers;
     }
