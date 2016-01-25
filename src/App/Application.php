@@ -6,8 +6,12 @@
  */
 namespace App;
 
+use App\Providers\UserProvider;
 use Silex\Application as SilexApplication;
+use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\MonologServiceProvider;
+use Silex\Provider\SecurityJWTServiceProvider;
+use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 
 /**
@@ -66,6 +70,9 @@ class Application extends SilexApplication
         /** @noinspection PhpIncludeInspection */
         require $configFile;
 
+        // Create application config values
+        $this->applicationConfig();
+
         // Register all necessary providers
         $this->applicationRegister();
 
@@ -93,6 +100,45 @@ class Application extends SilexApplication
         return $this->env;
     }
 
+    private function applicationConfig()
+    {
+        $app = $this;
+
+        // Set provider for application users
+        $this['users'] = function() use ($app) {
+            return new UserProvider($app['db']);
+        };
+
+        // Security JWT configuration
+        $this['security.jwt'] = [
+            'secret_key'    => 'todo_this_should_be_configurable',
+            'life_time'     => 86400,
+            'options'       => [
+                'username_claim'    => 'identifier',    // default name, option specifying claim containing username
+                'header_name'       => 'Authorization', // default null, option for usage normal oauth2 header
+                'token_prefix'      => 'Bearer',
+            ]
+        ];
+
+        // Security Firewalls configuration
+        $this['security.firewalls'] = [
+            // Anonymous routes
+            'login' => [
+                'pattern'   => '^/auth/login$',
+                'anonymous' => true,
+            ],
+            // And all other routes
+            'secured' => [
+                'pattern'   => '^.*$',
+                'jwt'       => [
+                    'use_forward'               => true,
+                    'require_previous_session'  => false,
+                    'stateless'                 => true,
+                ],
+            ],
+        ];
+    }
+
     /**
      * Method to register all specified providers for application.
      *
@@ -100,8 +146,12 @@ class Application extends SilexApplication
      */
     private function applicationRegister()
     {
+        // Register all providers for application
         $this->register(new ValidatorServiceProvider());
         $this->register(new MonologServiceProvider(), $this->getMonologServiceProviderOptions());
+        $this->register(new SecurityServiceProvider());
+        $this->register(new SecurityJWTServiceProvider());
+        $this->register(new DoctrineServiceProvider(), $this->getDoctrineServiceProviderOptions());
     }
 
     /**
@@ -118,12 +168,35 @@ class Application extends SilexApplication
     /**
      * Getter method for MonologServiceProvider options.
      *
-     * @return array
+     * @todo    should these be configured via ini file?
+     *
+     * @return  array
      */
     private function getMonologServiceProviderOptions()
     {
         return [
             'monolog.logfile' => $this->rootDir . '/var/logs/app.log',
+        ];
+    }
+
+    /**
+     * Getter method for DoctrineServiceProvider options.
+     *
+     * @todo    Use ini file for these
+     *
+     * @return  array
+     */
+    private function getDoctrineServiceProviderOptions()
+    {
+        return [
+            'db.options' => [
+                'driver'    => 'pdo_mysql',
+                'host'      => 'localhost',
+                'dbname'    => 'silex_backend',
+                'user'      => 'silex',
+                'password'  => 'silex',
+                'charset'   => 'utf8mb4',
+            ],
         ];
     }
 }

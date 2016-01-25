@@ -63,7 +63,9 @@ class AuthController extends Base
 
         // Note this is just for mock data at this point
         if ($login->identifier === 'admin' && $login->password === 'nimda') {
-            return $this->app->json($login);
+            $token = $this->app['security.jwt.encoder']->encode(get_object_vars($login));
+
+            return $this->app->json(array('token' => $token));
         }
 
         throw new HttpException(401, 'Unauthorized');
