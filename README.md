@@ -27,6 +27,14 @@ $ php composer.phar install
 ## Configuration
 TODO
 
+## Nice to know things
+```GET http://yoururl/_dump```
+* generates pimple.json for autocomplete 
+* See [this](https://github.com/Sorien/silex-pimple-dumper) for more info
+
+```./bin/console orm:convert:mapping --from-database --namespace="App\\Entities\\" annotation ./src``` 
+* Generate Doctrine entities from database
+
 ## Contributing
 Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines.
 
