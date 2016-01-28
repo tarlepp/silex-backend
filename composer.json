@@ -18,6 +18,9 @@
       "App\\": "src/App"
     }
   },
+  "scripts": {
+    "post-install-cmd": "./bin/console migrations:migrate --no-interaction"
+  },
   "authors": [
     {
       "name": "Tarmo Leppänen",
