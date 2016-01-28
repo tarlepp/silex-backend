@@ -1,32 +1,47 @@
 <?php
-
+/**
+ * /src/App/Providers/UserProvider.php
+ *
+ * @author  TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
+ */
 namespace App\Providers;
 
-use Doctrine\DBAL\Connection;
+// Doctrine specified dependencies
+use Doctrine\ORM\EntityManager;
+
+// Symfony specified dependencies
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-use App\Models\User;
+// Application specified dependencies
+use App\Entities\User;
 
+/**
+ * Class UserProvider
+ *
+ * @category    Provider
+ * @package     App\Providers
+ * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
+ */
 class UserProvider implements UserProviderInterface
 {
     /**
-     * @var Connection
+     * @var EntityManager
      */
-    private $connection;
+    private $entityManager;
 
     /**
      * UserProvider constructor.
      *
-     * @param   Connection  $connection
+     * @param   EntityManager   $entityManager
      *
      * @return  UserProvider
      */
-    public function __construct(Connection $connection)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->connection = $connection;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -34,26 +49,27 @@ class UserProvider implements UserProviderInterface
      *
      * This method must throw UsernameNotFoundException if the user is not found.
      *
-     * @param string $username The username
+     * @throws  UsernameNotFoundException if the user is not found
      *
-     * @return UserInterface
+     * @param   string  $username   The username
      *
-     * @throws UsernameNotFoundException if the user is not found
+     * @return  UserInterface
      */
     public function loadUserByUsername($username)
     {
-        /* This is implemented in next phase
-        $sql = "SELECT * FROM user WHERE username = ?";
-        $user = $this->connection->fetchAssoc($sql, array((string) $username));
+        // Fetch user
+        $user = $this->entityManager
+            ->getRepository('App\Entities\User')
+            ->findOneBy(['username' => $username]);
 
-        die(__FILE__ . ":" . __LINE__);
-
-        throw new UsernameNotFoundException('foo');
-        */
-
-        // Create 'dummy' user that is always available.
-        $user = new User;
-        $user->username = $username;
+        if (is_null($user)) {
+            throw new UsernameNotFoundException(
+                sprintf(
+                    'User \'%s\' not found.',
+                    $username
+                )
+            );
+        }
 
         return $user;
     }
@@ -66,26 +82,53 @@ class UserProvider implements UserProviderInterface
      * object can just be merged into some internal array of users / identity
      * map.
      *
-     * @param UserInterface $user
+     * @throws  UnsupportedUserException if the account is not supported
      *
-     * @return UserInterface
+     * @param   UserInterface|User  $user
      *
-     * @throws UnsupportedUserException if the account is not supported
+     * @return  User
      */
     public function refreshUser(UserInterface $user)
     {
-        // TODO: Implement refreshUser() method.
+        // Check if given UserInterface object is supported
+        if (!$this->supportsClass(get_class($user))) {
+            throw new UnsupportedUserException(
+                sprintf(
+                    'Instances of "%s" are not supported.',
+                    get_class($user)
+                )
+            );
+        }
+
+        return $this->getUser($user->getId());
     }
 
     /**
      * Whether this provider supports the given user class.
      *
-     * @param string $class
+     * @param   string  $class
      *
-     * @return bool
+     * @return  bool
      */
     public function supportsClass($class)
     {
-        // TODO: Implement supportsClass() method.
+        return ($class === 'App\Entities\User') || is_subclass_of($class, 'App\Entities\User');
+    }
+
+    /**
+     * Getter method for user entity.
+     *
+     * @throws  \Doctrine\ORM\ORMException
+     * @throws  \Doctrine\ORM\OptimisticLockException
+     * @throws  \Doctrine\ORM\TransactionRequiredException
+     *
+     * @param   integer $id User id
+     *
+     * @return  null|User
+     */
+    public function getUser($id)
+    {
+        return $this->entityManager
+            ->find('App\Entities\User', $id);
     }
 }
