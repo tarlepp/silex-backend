@@ -6,10 +6,15 @@
  */
 namespace App\Controllers;
 
-use JsonMapper;
+// Application components
+use App\Models\Login;
+
+// Symfony components
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use App\Models\Login;
+
+// 3rd poarty components
+use JsonMapper;
 
 /**
  * Class AuthController
@@ -61,11 +66,17 @@ class AuthController extends Base
             throw new HttpException(400, 'Invalid data');
         }
 
-        // Note this is just for mock data at this point
-        if ($login->identifier === 'admin' && $login->password === 'nimda') {
-            $token = $this->app['security.jwt.encoder']->encode(get_object_vars($login));
+        // Catch all errors on user fetch and send just 401 if something fails
+        try {
+            $user = $this->app['users']->loadUserByUsername($login->identifier);
 
-            return $this->app->json(array('token' => $token));
+            if ($user->verifyPassword($login->password)) {
+                $token = $this->app['security.jwt.encoder']->encode($user->getTokenData());
+
+                return $this->app->json(['token' => $token]);
+            }
+        } catch (\Exception $error) {
+            throw new HttpException(401, 'Unauthorized', $error);
         }
 
         throw new HttpException(401, 'Unauthorized');
