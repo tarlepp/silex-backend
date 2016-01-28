@@ -6,13 +6,22 @@
  */
 namespace App;
 
-use App\Providers\UserProvider;
+// Silex application
 use Silex\Application as SilexApplication;
+
+// Silex specified providers
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\SecurityJWTServiceProvider;
 use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
+
+// 3rd party providers
+use Dflydev\Silex\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
+use Sorien\Provider\PimpleDumpProvider;
+
+// Application specified providers
+use App\Providers\UserProvider;
 
 /**
  * Class Application
@@ -54,8 +63,11 @@ class Application extends SilexApplication
         // Construct Silex application
         parent::__construct();
 
-        // Expose application to configuration files
-        /** @noinspection PhpUnusedLocalVariableInspection */
+        /**
+         * Expose application to configuration files
+         *
+         * @noinspection PhpUnusedLocalVariableInspection
+         */
         $app = $this;
 
         // Determine used configuration file
@@ -100,13 +112,18 @@ class Application extends SilexApplication
         return $this->env;
     }
 
+    /**
+     * Application configuration.
+     *
+     * @return  void
+     */
     private function applicationConfig()
     {
         $app = $this;
 
         // Set provider for application users
         $this['users'] = function() use ($app) {
-            return new UserProvider($app['db']);
+            return new UserProvider($app['orm.em']);
         };
 
         // Security JWT configuration
@@ -124,7 +141,7 @@ class Application extends SilexApplication
         $this['security.firewalls'] = [
             // Anonymous routes
             'login' => [
-                'pattern'   => '^/auth/login$',
+                'pattern'   => '^/auth/login|_dump$',
                 'anonymous' => true,
             ],
             // And all other routes
@@ -152,6 +169,8 @@ class Application extends SilexApplication
         $this->register(new SecurityServiceProvider());
         $this->register(new SecurityJWTServiceProvider());
         $this->register(new DoctrineServiceProvider(), $this->getDoctrineServiceProviderOptions());
+        $this->register(new DoctrineOrmServiceProvider(), $this->getDoctrineOrmServiceProviderOptions());
+        $this->register(new PimpleDumpProvider());
     }
 
     /**
@@ -168,7 +187,9 @@ class Application extends SilexApplication
     /**
      * Getter method for MonologServiceProvider options.
      *
-     * @todo    should these be configured via ini file?
+     * @todo should these be configured via ini file?
+     *
+     * @see http://silex.sensiolabs.org/doc/providers/monolog.html
      *
      * @return  array
      */
@@ -182,7 +203,9 @@ class Application extends SilexApplication
     /**
      * Getter method for DoctrineServiceProvider options.
      *
-     * @todo    Use ini file for these
+     * @todo Use ini file for these
+     *
+     * @see http://silex.sensiolabs.org/doc/providers/doctrine.html
      *
      * @return  array
      */
@@ -196,6 +219,29 @@ class Application extends SilexApplication
                 'user'      => 'silex',
                 'password'  => 'silex',
                 'charset'   => 'utf8mb4',
+            ],
+        ];
+    }
+
+    /**
+     * Getter method for DoctrineOrmServiceProvider options.
+     *
+     * @see https://github.com/dflydev/dflydev-doctrine-orm-service-provider#configuration
+     *
+     * @return  array
+     */
+    private function getDoctrineOrmServiceProviderOptions()
+    {
+        return [
+            'orm.em.options' => [
+                'mappings' => [
+                    [
+                        'type'                          => 'annotation',
+                        'namespace'                     => 'App\Entities',
+                        'path'                          => $this->rootDir . 'src/App/Entities',
+                        'use_simple_annotation_reader'  => false,
+                    ]
+                ],
             ],
         ];
     }
