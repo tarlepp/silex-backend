@@ -53,7 +53,7 @@ class UserProvider implements UserProviderInterface
      *
      * @param   string  $username   The username
      *
-     * @return  UserInterface
+     * @return  User
      */
     public function loadUserByUsername($username)
     {
