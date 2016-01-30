@@ -130,6 +130,9 @@ class Application extends SilexApplication
                 'token_prefix'      => 'Bearer',
             ]
         ];
+
+        // Change output directory of pimple dumper
+        $this['pimpledump.output_dir'] = $this->rootDir . 'var/';
     }
 
     /**
