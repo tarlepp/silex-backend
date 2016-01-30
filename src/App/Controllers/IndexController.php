@@ -29,12 +29,12 @@ class IndexController extends Base
     }
 
     /**
-     * Index action handling, this will just return empty response.
+     * Index action handling, this will just redirect user to API docs.
      *
      * @return string
      */
     public function index()
     {
-        return '';
+        return $this->app->redirect('api/api-docs');
     }
 }

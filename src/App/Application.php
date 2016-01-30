@@ -176,9 +176,19 @@ class Application extends SilexApplication
 
         // Security Firewalls configuration
         $this['security.firewalls'] = [
-            // Anonymous routes
+            // Root route
+            'root' => [
+                'pattern'   => '^/$',
+                'anonymous' => true,
+            ],
+            // Login route
             'login' => [
-                'pattern'   => '^/auth/login|_dump$',
+                'pattern'   => '^/auth/login$',
+                'anonymous' => true,
+            ],
+            // Pimple dump
+            'pimpleDump' => [
+                'pattern'   => '^_dump$',
                 'anonymous' => true,
             ],
             // API docs are also anonymous
