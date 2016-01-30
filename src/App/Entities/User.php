@@ -6,14 +6,31 @@
  */
 namespace App\Entities;
 
-use Doctrine\ORM\Mapping as ORM;
+// Symfony components
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+
+// Doctrine components
+use Doctrine\ORM\Mapping as ORM;
+
+// 3rd party components
+use Swagger\Annotations as SWG;
 
 /**
  * User
  *
- * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="uq_username", columns={"username"}), @ORM\UniqueConstraint(name="uq_email", columns={"email"})})
+ * @SWG\Model(
+ *     id="UserEntity",
+ *     description="User object"
+ * )
+ *
+ * @ORM\Table(
+ *      name="user",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(name="uq_username", columns={"username"}),
+ *          @ORM\UniqueConstraint(name="uq_email", columns={"email"})
+ *      }
+ *  )
  * @ORM\Entity
  */
 class User extends Base implements AdvancedUserInterface, \Serializable
@@ -21,53 +38,124 @@ class User extends Base implements AdvancedUserInterface, \Serializable
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @SWG\Property(
+     *      name="id",
+     *      type="integer",
+     *      description="ID"
+     *  )
+     *
+     * @ORM\Column(
+     *      name="id",
+     *      type="integer",
+     *      nullable=false
+     *  )
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    public $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=255, nullable=false)
+     * @SWG\Property(
+     *      name="username",
+     *      type="string",
+     *      description="Username"
+     *  )
+     *
+     * @ORM\Column(
+     *      name="username",
+     *      type="string",
+     *      length=255,
+     *      nullable=false
+     *  )
      */
-    private $username;
+    public $username;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="firstname", type="string", length=255, nullable=false)
+     * @SWG\Property(
+     *      name="firstname",
+     *      type="string",
+     *      description="Firstname"
+     *  )
+     *
+     * @ORM\Column(
+     *      name="firstname",
+     *      type="string",
+     *      length=255,
+     *      nullable=false
+     *  )
      */
-    private $firstname;
+    public $firstname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="surname", type="string", length=255, nullable=false)
+     * @SWG\Property(
+     *      name="surname",
+     *      type="string",
+     *      description="Surname"
+     *  )
+     *
+     * @ORM\Column(
+     *      name="surname",
+     *      type="string",
+     *      length=255,
+     *      nullable=false
+     *  )
      */
-    private $surname;
+    public $surname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255, nullable=false)
+     * @SWG\Property(
+     *      name="email",
+     *      type="string",
+     *      description="Email address"
+     *  )
+     *
+     * @ORM\Column(
+     *      name="email",
+     *      type="string",
+     *      length=255,
+     *      nullable=false
+     *  )
      */
-    private $email;
+    public $email;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=255, nullable=false)
+     * @ORM\Column(
+     *      name="password",
+     *      type="string",
+     *      length=255,
+     *      nullable=false
+     *  )
      */
     private $password;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="roles", type="string", length=255, nullable=false)
+     * @SWG\Property(
+     *      name="roles",
+     *      description="User roles",
+     *      type="array",
+     *      enum="['ROLE_ADMIN','ROLE_USER']"
+     *  )
+     *
+     * @ORM\Column(
+     *      name="roles",
+     *      type="string",
+     *      length=255,
+     *      nullable=false
+     *  )
      */
-    private $roles;
+    public $roles;
 
     /**
      * Getter method for current user ID.
@@ -234,9 +322,9 @@ class User extends Base implements AdvancedUserInterface, \Serializable
     /**
      * String representation of object
      *
-     * @link  http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     * @since 5.1.0
+     * @link    http://php.net/manual/en/serializable.serialize.php
+     *
+     * @return  string the string representation of the object or null
      */
     public function serialize()
     {
@@ -248,14 +336,11 @@ class User extends Base implements AdvancedUserInterface, \Serializable
     /**
      * Constructs the object
      *
-     * @link  http://php.net/manual/en/serializable.unserialize.php
+     * @link    http://php.net/manual/en/serializable.unserialize.php
      *
-     * @param string $serialized <p>
-     *                           The string representation of the object.
-     *                           </p>
+     * @param   string $serialized The string representation of the object.
      *
-     * @return void
-     * @since 5.1.0
+     * @return  void
      */
     public function unserialize($serialized)
     {
@@ -263,19 +348,14 @@ class User extends Base implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Getter method for user token data.
+     * Getter method for user identifier, this can be username or email.
      *
-     * @return array
+     * @todo    How to determine which one this is?
+     *
+     * @return  string
      */
-    public function getTokenData()
+    public function getIdentifier()
     {
-        return [
-            'id'            => $this->id,
-            'identifier'    => $this->username,
-            'username'      => $this->username,
-            'firstname'     => $this->firstname,
-            'surname'       => $this->surname,
-            'roles'         => $this->getRoles(),
-        ];
+        return $this->username;
     }
 }

@@ -6,13 +6,22 @@
  */
 namespace App\Models;
 
+// Symfony components
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
+
+// 3rd party components
+use Swagger\Annotations as SWG;
 
 /**
  * Class Login
  *
  * Model class for login process, this is needed to just validate user input.
+ *
+ * @SWG\Model(
+ *     id="Login",
+ *     description="JSON object for login"
+ * )
  *
  * @category    Model
  * @package     App\Models
@@ -21,11 +30,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Login
 {
     /**
+     * @SWG\Property(
+     *      name="identifier",
+     *      type="string",
+     *      description="User identifier; email or username"
+     *  )
+     *
      * @var string
      */
     public $identifier;
 
     /**
+     *  @SWG\Property(
+     *      name="password",
+     *      type="string",
+     *      description="User password"
+     *  )
+     *
      * @var string
      */
     public $password;

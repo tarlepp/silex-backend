@@ -17,6 +17,7 @@ use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 
 // 3rd party providers
+use JDesrosiers\Silex\Provider\SwaggerServiceProvider;
 use Dflydev\Silex\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
 use Sorien\Provider\PimpleDumpProvider;
 
@@ -63,11 +64,8 @@ class Application extends SilexApplication
         // Construct Silex application
         parent::__construct();
 
-        /**
-         * Expose application to configuration files
-         *
-         * @noinspection PhpUnusedLocalVariableInspection
-         */
+        // Expose application to configuration files
+        /** @noinspection PhpUnusedLocalVariableInspection */
         $app = $this;
 
         // Determine used configuration file
@@ -87,6 +85,9 @@ class Application extends SilexApplication
 
         // Register all necessary providers
         $this->applicationRegister();
+
+        // Configure application firewall
+        $this->applicationFirewall();
 
         // Attach application mount points
         $this->applicationMount();
@@ -119,13 +120,6 @@ class Application extends SilexApplication
      */
     private function applicationConfig()
     {
-        $app = $this;
-
-        // Set provider for application users
-        $this['users'] = function() use ($app) {
-            return new UserProvider($app['orm.em']);
-        };
-
         // Security JWT configuration
         $this['security.jwt'] = [
             'secret_key'    => 'todo_this_should_be_configurable',
@@ -135,24 +129,6 @@ class Application extends SilexApplication
                 'header_name'       => 'Authorization', // default null, option for usage normal oauth2 header
                 'token_prefix'      => 'Bearer',
             ]
-        ];
-
-        // Security Firewalls configuration
-        $this['security.firewalls'] = [
-            // Anonymous routes
-            'login' => [
-                'pattern'   => '^/auth/login|_dump$',
-                'anonymous' => true,
-            ],
-            // And all other routes
-            'secured' => [
-                'pattern'   => '^.*$',
-                'jwt'       => [
-                    'use_forward'               => true,
-                    'require_previous_session'  => false,
-                    'stateless'                 => true,
-                ],
-            ],
         ];
     }
 
@@ -171,6 +147,43 @@ class Application extends SilexApplication
         $this->register(new DoctrineServiceProvider(), $this->getDoctrineServiceProviderOptions());
         $this->register(new DoctrineOrmServiceProvider(), $this->getDoctrineOrmServiceProviderOptions());
         $this->register(new PimpleDumpProvider());
+        $this->register(new SwaggerServiceProvider(), $this->getSwaggerServiceProviderOptions());
+    }
+
+    /**
+     * Method to setup application firewall.
+     *
+     * @see http://silex.sensiolabs.org/doc/providers/security.html
+     *
+     * @return  array
+     */
+    private function applicationFirewall()
+    {
+        $entityManager = $this['orm.em'];
+
+        // Set provider for application users
+        $this['users'] = function() use ($entityManager) {
+            return new UserProvider($entityManager);
+        };
+
+        // Security Firewalls configuration
+        $this['security.firewalls'] = [
+            // Anonymous routes
+            'login' => [
+                'pattern'   => '^/auth/login|_dump$',
+                'anonymous' => true,
+            ],
+            // And all other routes
+            'secured' => [
+                'pattern'   => '^.*$',
+                'users'     => $this['users'],
+                'jwt'       => [
+                    'use_forward'               => true,
+                    'require_previous_session'  => false,
+                    'stateless'                 => true,
+                ],
+            ],
+        ];
     }
 
     /**
@@ -243,6 +256,21 @@ class Application extends SilexApplication
                     ]
                 ],
             ],
+        ];
+    }
+
+    /**
+     * Getter method for SwaggerServiceProvider options.
+     *
+     * @see https://github.com/jdesrosiers/silex-swagger-provider#parameters
+     *
+     * @return  array
+     */
+    private function getSwaggerServiceProviderOptions()
+    {
+        return [
+            'swagger.srcDir'        => $this->rootDir . 'vendor/zircote/swagger-php/library',
+            'swagger.servicePath'   => $this->rootDir . 'src/',
         ];
     }
 }

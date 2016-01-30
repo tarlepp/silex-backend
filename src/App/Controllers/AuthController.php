@@ -13,14 +13,21 @@ use App\Models\Login;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-// 3rd poarty components
+// 3rd party components
 use JsonMapper;
+use Swagger\Annotations as SWG;
 
 /**
  * Class AuthController
  *
  * This handles following route handling on application:
- *  POST /auth/login
+ *  POST    /auth/login
+ *  GET     /auth/profile
+ *
+ * @SWG\Resource(
+ *      resourcePath="/auth",
+ *      description="User authentication API endpoints.",
+ *  )
  *
  * @category    Controller
  * @package     App\Controllers
@@ -29,17 +36,31 @@ use JsonMapper;
 class AuthController extends Base
 {
     /**
-     * Method to register all routes for current controller. Note that all routes contains 'auth' prefix.
+     * Method to register all routes for current controller. Note that all routes contains "auth" prefix.
      *
      * @return void
      */
     public function registerRoutes()
     {
         $this->controllers->post('/login', [$this, 'login']);
+        $this->controllers->get('/profile', [$this, 'profile']);
     }
 
     /**
-     * Implementation for 'POST /auth/login' route.
+     * User login action which returns JSON Web Token (JWT) on valid request.
+     *
+     * @SWG\Api(
+     *      path="/login",
+     *      @SWG\Operations(
+     *          @SWG\Operation(
+     *              method="POST",
+     *              type="Authorization",
+     *              @SWG\Partial("Credentials"),
+     *              @SWG\Partial("Error400"),
+     *              @SWG\Partial("Error401"),
+     *          ),
+     *      ),
+     *  )
      *
      * @throws  \JsonMapper_Exception
      * @throws  HttpException
@@ -71,14 +92,39 @@ class AuthController extends Base
             $user = $this->app['users']->loadUserByUsername($login->identifier);
 
             if ($user->verifyPassword($login->password)) {
-                $token = $this->app['security.jwt.encoder']->encode($user->getTokenData());
+                $userData = (array)$user;
+                $userData['identifier'] = $user->getIdentifier();
 
-                return $this->app->json(['token' => $token]);
+                // Return token response
+                return $this->app->json(['token' => $this->app['security.jwt.encoder']->encode($userData)]);
             }
         } catch (\Exception $error) {
             throw new HttpException(401, 'Unauthorized', $error);
         }
 
         throw new HttpException(401, 'Unauthorized');
+    }
+
+    /**
+     * Return current user public profile data.
+     *
+     * @SWG\Api(
+     *      path="/profile",
+     *      @SWG\Operations(
+     *          @SWG\Operation(
+     *              method="GET",
+     *              type="UserEntity",
+     *              @SWG\Partial("Authorization"),
+     *              @SWG\Partial("Error401"),
+     *              @SWG\Partial("ErrorJWT"),
+     *          ),
+     *      ),
+     *  )
+     *
+     * @return  \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function profile()
+    {
+        return $this->app->json($this->app['user']);
     }
 }
