@@ -12,7 +12,8 @@
     "kurl/silex-doctrine-migrations-provider": "0.2.0",
     "dflydev/doctrine-orm-service-provider": "1.0.7",
     "sorien/silex-pimple-dumper": "1.0.3",
-    "jdesrosiers/silex-swagger-provider": "1.2.0"
+    "jdesrosiers/silex-swagger-provider": "1.2.0",
+    "jdesrosiers/silex-cors-provider": "0.1.5"
   },
   "autoload": {
     "psr-4": {

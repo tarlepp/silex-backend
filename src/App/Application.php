@@ -17,8 +17,9 @@ use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 
 // 3rd party providers
-use JDesrosiers\Silex\Provider\SwaggerServiceProvider;
 use Dflydev\Silex\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
+use JDesrosiers\Silex\Provider\CorsServiceProvider;
+use JDesrosiers\Silex\Provider\SwaggerServiceProvider;
 use Sorien\Provider\PimpleDumpProvider;
 
 // Application specified providers
@@ -91,6 +92,9 @@ class Application extends SilexApplication
 
         // Attach application mount points
         $this->applicationMount();
+
+        // Attach CORS to application
+        $this->after($this['cors']);
     }
 
     /**
@@ -151,6 +155,7 @@ class Application extends SilexApplication
         $this->register(new DoctrineOrmServiceProvider(), $this->getDoctrineOrmServiceProviderOptions());
         $this->register(new PimpleDumpProvider());
         $this->register(new SwaggerServiceProvider(), $this->getSwaggerServiceProviderOptions());
+        $this->register(new CorsServiceProvider(), $this->getCorsServiceProviderOptions());
     }
 
     /**
@@ -174,6 +179,11 @@ class Application extends SilexApplication
             // Anonymous routes
             'login' => [
                 'pattern'   => '^/auth/login|_dump$',
+                'anonymous' => true,
+            ],
+            // API docs are also anonymous
+            'docs' => [
+                'pattern'   => '^/api/api-docs',
                 'anonymous' => true,
             ],
             // And all other routes
@@ -275,5 +285,17 @@ class Application extends SilexApplication
             'swagger.srcDir'        => $this->rootDir . 'vendor/zircote/swagger-php/library',
             'swagger.servicePath'   => $this->rootDir . 'src/',
         ];
+    }
+
+    /**
+     * Getter method for CorsServiceProvider options.
+     *
+     * @see https://github.com/jdesrosiers/silex-cors-provider#parameters
+     *
+     * @return  array
+     */
+    private function getCorsServiceProviderOptions()
+    {
+        return [];
     }
 }
