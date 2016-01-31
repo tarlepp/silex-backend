@@ -21,7 +21,9 @@ use Symfony\Component\Validator\Validator\RecursiveValidator;
 /**
  * Class Base
  *
- * @todo Create another layer for these REST functions
+ * @todo How to implement COUNT functionality?
+ * @todo How to handle WHERE param?
+ * @todo Is there need to paginate 'find' method results?
  *
  * @category    Services
  * @package     App\Services
