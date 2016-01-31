@@ -6,9 +6,6 @@
  */
 namespace App\Services;
 
-// Doctrine components
-use Doctrine\ORM\EntityRepository;
-
 // Entity components
 use App\Entities\Author;
 
@@ -25,21 +22,12 @@ use App\Entities\Author;
  * @method  Author      update($id, $data)
  * @method  Author      delete($id)
  */
-class AuthorService extends Base
+class AuthorService extends Rest
 {
     /**
-     * Getter method for current repository.
+     * Name of the repository that current REST API will use.
      *
-     * @todo    this should be done other way...
-     *
-     * @return  EntityRepository
+     * @var string
      */
-    public function getRepository()
-    {
-        if (!$this->repository) {
-            $this->repository = $this->entityManager->getRepository('App\Entities\Author');
-        }
-
-        return $this->repository;
-    }
+    public $repositoryName = 'App\Entities\Author';
 }
