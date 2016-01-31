@@ -44,17 +44,21 @@ class Swagger
      *  )
      *
      * @SWG\ResponseMessage(
+     *      partial="Error404",
+     *      code=401,
+     *      message={
+     *          "message": "Not found",
+     *          "status": 404,
+     *          "code": 0,
+     *      }
+     *  )
+     *
+     * @SWG\ResponseMessage(
      *      partial="ErrorJWT",
      *      code=401,
      *      message={
      *          "message": "A Token was not found in the TokenStorage.",
      *      },
-     *  )
-     *
-     * @sSWG\ResponseMessage(
-     *      partial="UserEntity",
-     *      code=200,
-     *      message="UserEntity",
      *  )
      */
 
@@ -79,6 +83,16 @@ class Swagger
      *      required=true,
      *      allowMultiple=false,
      *      type="Login",
+     *  )
+     *
+     * @SWG\Parameter(
+     *      partial="QueryIdentifier",
+     *      name="id",
+     *      description="Object ID",
+     *      paramType="path",
+     *      required=true,
+     *      allowMultiple=false,
+     *      type="integer",
      *  )
      */
 

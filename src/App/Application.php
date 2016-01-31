@@ -7,6 +7,7 @@
 namespace App;
 
 // Silex application
+use App\Services\Loader;
 use Silex\Application as SilexApplication;
 
 // Silex specified providers
@@ -90,6 +91,9 @@ class Application extends SilexApplication
         // Configure application firewall
         $this->applicationFirewall();
 
+        // Load services
+        $this->loadServices();
+
         // Attach application mount points
         $this->applicationMount();
 
@@ -134,9 +138,6 @@ class Application extends SilexApplication
                 'token_prefix'      => 'Bearer',
             ]
         ];
-
-        // Change output directory of pimple dumper
-        $this['pimpledump.output_dir'] = $this->rootDir . 'var/';
     }
 
     /**
@@ -188,7 +189,7 @@ class Application extends SilexApplication
             ],
             // Pimple dump
             'pimpleDump' => [
-                'pattern'   => '^_dump$',
+                'pattern'   => '^/_dump$',
                 'anonymous' => true,
             ],
             // API docs are also anonymous
@@ -279,6 +280,7 @@ class Application extends SilexApplication
                     ]
                 ],
             ],
+            'orm.proxies_dir' => $this->rootDir . 'var/orm/proxies',
         ];
     }
 
@@ -291,9 +293,17 @@ class Application extends SilexApplication
      */
     private function getSwaggerServiceProviderOptions()
     {
+        $excludePaths = [
+            $this->rootDir . 'src/App/Console/',
+            $this->rootDir . 'src/App/Core/',
+            $this->rootDir . 'src/App/Providers/',
+            $this->rootDir . 'src/App/Services/',
+        ];
+
         return [
             'swagger.srcDir'        => $this->rootDir . 'vendor/zircote/swagger-php/library',
             'swagger.servicePath'   => $this->rootDir . 'src/',
+            'swagger.excludePath'   => $excludePaths,
         ];
     }
 
@@ -307,5 +317,16 @@ class Application extends SilexApplication
     private function getCorsServiceProviderOptions()
     {
         return [];
+    }
+
+    /**
+     * Load shared services.
+     *
+     * @return  void
+     */
+    private function loadServices()
+    {
+        $loader = new Loader($this);
+        $loader->bindServicesIntoContainer();
     }
 }

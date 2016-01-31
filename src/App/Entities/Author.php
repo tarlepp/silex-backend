@@ -6,6 +6,10 @@
  */
 namespace App\Entities;
 
+// Symfony components
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
+
 // Doctrine components
 use Doctrine\ORM\Mapping as ORM;
 
@@ -84,4 +88,55 @@ class Author extends Base
      *  )
      */
     public $description;
+
+    /**
+     * Getter for 'name' attribute.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Setter for 'name' attribute.
+     *
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Getter for 'description' attribute.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Setter for 'description' attribute.
+     *
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * Validator definitions for 'Author' entity
+     *
+     * @param   ClassMetadata   $metadata
+     */
+    static public function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('name', new Assert\NotBlank());
+        $metadata->addPropertyConstraint('description', new Assert\NotBlank());
+    }
 }
