@@ -7,6 +7,7 @@
 namespace App\Controllers;
 
 // Symfony components
+use App\Services\AuthorService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Exception\ValidatorException;
@@ -114,6 +115,23 @@ use Swagger\Annotations as SWG;
 class AuthorController extends Rest
 {
     /**
+     * Service that controller is using.
+     *
+     * @var AuthorService
+     */
+    protected $service;
+
+    /**
+     * Method to expose necessary services for controller use.
+     *
+     * @return  void
+     */
+    public function exposeServices()
+    {
+        $this->service = $this->app['author.service'];
+    }
+
+    /**
      * Method to register all routes for current controller.
      *
      * @return void
@@ -134,7 +152,7 @@ class AuthorController extends Rest
      */
     public function find()
     {
-        return $this->app->json($this->app['author.service']->find());
+        return $this->app->json($this->service->find());
     }
 
     /**
@@ -146,7 +164,7 @@ class AuthorController extends Rest
      */
     public function findOne($id)
     {
-        $author = $this->app['author.service']->findOne($id);
+        $author = $this->service->findOne($id);
 
         if (is_null($author)) {
             throw new HttpException(404, 'Not found');
@@ -167,7 +185,7 @@ class AuthorController extends Rest
         $data = json_decode($request->getContent());
 
         try {
-            $author = $this->app['author.service']->create($data);
+            $author = $this->service->create($data);
         } catch (ValidatorException $error) {
             throw new HttpException(400, $error->getMessage());
         }
@@ -188,7 +206,7 @@ class AuthorController extends Rest
         $data = json_decode($request->getContent());
 
         try {
-            $author = $this->app['author.service']->update($id, $data);
+            $author = $this->service->update($id, $data);
         } catch (ValidatorException $error) {
             throw new HttpException(400, $error->getMessage());
         }
@@ -205,7 +223,7 @@ class AuthorController extends Rest
      */
     public function delete($id)
     {
-        $this->app['author.service']->delete($id);
+        $this->service->delete($id);
 
         return $this->app->json('', 204);
     }
