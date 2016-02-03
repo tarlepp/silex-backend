@@ -120,7 +120,7 @@ class Application extends SilexApplication
                 'vars.options' => [
                     'cache'         => true,
                     'cache_path'    => $this->rootDir . 'var',
-                    'cache_expire'  => 0,
+                    'cache_expire'  => $this->env === 'dev' ? 0 : 500,
                     'replacements'  => [
                         'rootDir'   => $this->rootDir,
                         'env'       => $this->env,
