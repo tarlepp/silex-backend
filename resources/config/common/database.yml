@@ -1,0 +1,46 @@
+#
+# /resources/config/common/database.yml
+#
+# This file contains common database related settings for Silex application.
+#
+# Note that these settings are used IF any environment OR local specified settings are not configured. If you want to
+# override any of these values use environment specified file which is located in dev, prod or test directory. Note
+# that these files are binded to application environment and are stored to VCS so those are 'common' to all devs.
+#
+# If you just want to override these settings in your _own_ environment you can create 'local.yml' file and override
+# what ever you want to. Also note that this 'local.yml' can be created to any of following directories under config:
+#   - common
+#   - test
+#   - dev
+#   - prod
+#
+
+#
+# DoctrineServiceProvider options
+#
+# http://silex.sensiolabs.org/doc/providers/doctrine.html
+#
+database:
+  db.options:
+    driver:   pdo_mysql
+    host:     localhost
+    dbname:   silex_backend
+    user:     silex
+    password: silex
+    charset:  utf8mb4
+
+#
+# DoctrineOrmServiceProvider
+#
+# https://github.com/dflydev/dflydev-doctrine-orm-service-provider#configuration
+#
+orm:
+  orm.em.options:
+    mappings:
+     -
+      type:                         annotation
+      namespace:                    App\Entities
+      path:                         %rootDir%src/App/Entities
+      use_simple_annotation_reader: true
+
+  proxies_dir: %rootDir%var/orm/proxies

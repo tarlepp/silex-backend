@@ -7,7 +7,6 @@
 namespace App;
 
 // Silex application
-use App\Services\Loader;
 use Silex\Application as SilexApplication;
 
 // Silex specified providers
@@ -22,9 +21,11 @@ use Dflydev\Silex\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
 use JDesrosiers\Silex\Provider\CorsServiceProvider;
 use JDesrosiers\Silex\Provider\SwaggerServiceProvider;
 use Sorien\Provider\PimpleDumpProvider;
+use M1\Vars\Provider\Silex\VarsServiceProvider;
 
 // Application specified providers
 use App\Providers\UserProvider;
+use App\Services\Loader;
 
 /**
  * Class Application
@@ -66,23 +67,7 @@ class Application extends SilexApplication
         // Construct Silex application
         parent::__construct();
 
-        // Expose application to configuration files
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $app = $this;
-
-        // Determine used configuration file
-        $configFile = sprintf('%s/resources/config/%s.php', $this->rootDir, $this->env);
-
-        // Oh noes, config file doesn't exists => fatal error
-        if (!file_exists($configFile)) {
-            throw new \RuntimeException(sprintf('The file "%s" does not exist.', $configFile));
-        }
-
-        // Attach configuration file, this will change $app (reference to $this) variable
-        /** @noinspection PhpIncludeInspection */
-        require $configFile;
-
-        // Create application config values
+        // Create application configuration
         $this->applicationConfig();
 
         // Register all necessary providers
@@ -128,16 +113,25 @@ class Application extends SilexApplication
      */
     private function applicationConfig()
     {
-        // Security JWT configuration
-        $this['security.jwt'] = [
-            'secret_key'    => 'todo_this_should_be_configurable',
-            'life_time'     => 86400,
-            'options'       => [
-                'username_claim'    => 'identifier',    // default name, option specifying claim containing username
-                'header_name'       => 'Authorization', // default null, option for usage normal oauth2 header
-                'token_prefix'      => 'Bearer',
+        // Register configuration provider
+        $this->register(
+            new VarsServiceProvider($this->rootDir . 'resources/config/' . $this->env . '/config.yml'),
+            [
+                'vars.options' => [
+                    'cache'         => true,
+                    'cache_path'    => $this->rootDir . 'var',
+                    'cache_expire'  => 0,
+                    'replacements'  => [
+                        'rootDir'   => $this->rootDir,
+                        'env'       => $this->env,
+                    ],
+                ],
             ]
-        ];
+        );
+
+        // Set application level values
+        $this['debug'] = $this['vars']->get('debug');
+        $this['security.jwt'] = $this['vars']->get('security.jwt');
     }
 
     /**
@@ -149,14 +143,14 @@ class Application extends SilexApplication
     {
         // Register all providers for application
         $this->register(new ValidatorServiceProvider());
-        $this->register(new MonologServiceProvider(), $this->getMonologServiceProviderOptions());
         $this->register(new SecurityServiceProvider());
         $this->register(new SecurityJWTServiceProvider());
-        $this->register(new DoctrineServiceProvider(), $this->getDoctrineServiceProviderOptions());
-        $this->register(new DoctrineOrmServiceProvider(), $this->getDoctrineOrmServiceProviderOptions());
         $this->register(new PimpleDumpProvider());
-        $this->register(new SwaggerServiceProvider(), $this->getSwaggerServiceProviderOptions());
-        $this->register(new CorsServiceProvider(), $this->getCorsServiceProviderOptions());
+        $this->register(new MonologServiceProvider(), $this['vars']->get('monolog'));
+        $this->register(new DoctrineServiceProvider(), $this['vars']->get('database'));
+        $this->register(new DoctrineOrmServiceProvider(), $this['vars']->get('orm'));
+        $this->register(new SwaggerServiceProvider(), $this['vars']->get('swagger'));
+        $this->register(new CorsServiceProvider(), $this['vars']->get('cors'));
     }
 
     /**
@@ -219,104 +213,6 @@ class Application extends SilexApplication
     {
         // Register all application routes
         $this->mount('', new ControllerProvider());
-    }
-
-    /**
-     * Getter method for MonologServiceProvider options.
-     *
-     * @todo should these be configured via ini file?
-     *
-     * @see http://silex.sensiolabs.org/doc/providers/monolog.html
-     *
-     * @return  array
-     */
-    private function getMonologServiceProviderOptions()
-    {
-        return [
-            'monolog.logfile' => $this->rootDir . '/var/logs/app.log',
-        ];
-    }
-
-    /**
-     * Getter method for DoctrineServiceProvider options.
-     *
-     * @todo Use ini file for these
-     *
-     * @see http://silex.sensiolabs.org/doc/providers/doctrine.html
-     *
-     * @return  array
-     */
-    private function getDoctrineServiceProviderOptions()
-    {
-        return [
-            'db.options' => [
-                'driver'    => 'pdo_mysql',
-                'host'      => 'localhost',
-                'dbname'    => 'silex_backend',
-                'user'      => 'silex',
-                'password'  => 'silex',
-                'charset'   => 'utf8mb4',
-            ],
-        ];
-    }
-
-    /**
-     * Getter method for DoctrineOrmServiceProvider options.
-     *
-     * @see https://github.com/dflydev/dflydev-doctrine-orm-service-provider#configuration
-     *
-     * @return  array
-     */
-    private function getDoctrineOrmServiceProviderOptions()
-    {
-        return [
-            'orm.em.options' => [
-                'mappings' => [
-                    [
-                        'type'                          => 'annotation',
-                        'namespace'                     => 'App\Entities',
-                        'path'                          => $this->rootDir . 'src/App/Entities',
-                        'use_simple_annotation_reader'  => false,
-                    ]
-                ],
-            ],
-            'orm.proxies_dir' => $this->rootDir . 'var/orm/proxies',
-        ];
-    }
-
-    /**
-     * Getter method for SwaggerServiceProvider options.
-     *
-     * @see https://github.com/jdesrosiers/silex-swagger-provider#parameters
-     *
-     * @return  array
-     */
-    private function getSwaggerServiceProviderOptions()
-    {
-        $excludePaths = [
-            $this->rootDir . 'src/App/Console/',
-            $this->rootDir . 'src/App/Core/',
-            $this->rootDir . 'src/App/Providers/',
-            $this->rootDir . 'src/App/Services/',
-        ];
-
-        return [
-            'swagger.srcDir'        => $this->rootDir . 'vendor/zircote/swagger-php/library',
-            'swagger.servicePath'   => $this->rootDir . 'src/',
-            'swagger.excludePath'   => $excludePaths,
-        ];
-    }
-
-    /**
-     * Getter method for CorsServiceProvider options.
-     *
-     * @see https://github.com/jdesrosiers/silex-cors-provider#parameters
-     *
-     * @return  array
-     */
-    private function getCorsServiceProviderOptions()
-    {
-        return [];
     }
 
     /**

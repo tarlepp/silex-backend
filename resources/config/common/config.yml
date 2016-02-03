@@ -1,0 +1,11 @@
+#
+# /resources/config/common/config.yml
+#
+# This file will import all the _base_ settings for application, see each of files that are listed below for detailed
+# information.
+#
+imports:
+  - { resource: database.yml }
+  - { resource: parameters.yml }
+  - { resource: security.yml }
+  - { resource: @local.yml } # Note that this file is for you to override any of this level configurations

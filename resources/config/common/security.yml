@@ -1,0 +1,36 @@
+#
+# /resources/config/common/security.yml
+#
+# This file contains common security related parameters for Silex application.
+#
+# Note that these settings are used IF any environment OR local specified settings are not configured. If you want to
+# override any of these values use environment specified file which is located in dev, prod or test directory. Note
+# that these files are binded to application environment and are stored to VCS so those are 'common' to all devs.
+#
+# If you just want to override these settings in your _own_ environment you can create 'local.yml' file and override
+# what ever you want to. Also note that this 'local.yml' can be created to any of following directories under config:
+#   - common
+#   - test
+#   - dev
+#   - prod
+#
+
+#
+# JWT configuration
+#
+# https://github.com/cnam/security-jwt-service-provider#create-configuration
+#
+security.jwt:
+  secret_key: Change This In Your Application, Just Generate Some Random String
+  life_time:  86400
+  options:
+    username_claim: identifier
+    header_name:    Authorization
+    token_prefix:   Bearer
+
+#
+# CORS configuration
+#
+# https://github.com/jdesrosiers/silex-cors-provider#parameters
+#
+cors: []
