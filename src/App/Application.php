@@ -132,6 +132,7 @@ class Application extends SilexApplication
         // Set application level values
         $this['debug'] = $this['vars']->get('debug');
         $this['security.jwt'] = $this['vars']->get('security.jwt');
+        $this['pimpledump.output_dir'] = $this['vars']->get('pimpledump.output_dir');
     }
 
     /**

@@ -36,3 +36,5 @@ swagger:
     - %rootDir%src/App/Core/
     - %rootDir%src/App/Providers/
     - %rootDir%src/App/Services/
+
+pimpledump.output_dir: %rootDir%var
