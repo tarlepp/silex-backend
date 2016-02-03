@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cb76458fcf5dd09e8339f5d0e347e541",
-    "content-hash": "78fa0fac792637c2cdbc3fdf59d09f69",
+    "hash": "ec948c02e79ab70f805360c3dd015cc5",
+    "content-hash": "13968f17ac02380ea8362dd3ade68056",
     "packages": [
         {
             "name": "cnam/security-jwt-service-provider",
@@ -50,6 +50,57 @@
             ],
             "description": "Service Provider for usage jwt token for auth",
             "time": "2015-12-02 22:52:11"
+        },
+        {
+            "name": "deralex/yaml-config-service-provider",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/deralex/YamlConfigServiceProvider.git",
+                "reference": "5923f60e6fbb16432e47310cf9680fe658c8dc0e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/deralex/YamlConfigServiceProvider/zipball/5923f60e6fbb16432e47310cf9680fe658c8dc0e",
+                "reference": "5923f60e6fbb16432e47310cf9680fe658c8dc0e",
+                "shasum": ""
+            },
+            "require": {
+                "silex/silex": ">=1.0 <=1.3",
+                "symfony/yaml": "~2.4"
+            },
+            "require-dev": {
+                "phpspec/phpspec": "2.0.*@dev"
+            },
+            "suggest": {
+                "symfony/yaml": "~2.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "DerAlex\\Silex": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Kluth",
+                    "email": "contact@alexanderkluth.com"
+                }
+            ],
+            "description": "Silex ServiceProvider for using YAML configuration files",
+            "keywords": [
+                "silex"
+            ],
+            "time": "2015-03-10 12:58:27"
         },
         {
             "name": "dflydev/doctrine-orm-service-provider",
@@ -1060,6 +1111,77 @@
             "time": "2016-01-04 11:03:00"
         },
         {
+            "name": "m1/vars",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/m1/Vars.git",
+                "reference": "2e44721dc95f23938082b3aa45ffb6a84138758e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/m1/Vars/zipball/2e44721dc95f23938082b3aa45ffb6a84138758e",
+                "reference": "2e44721dc95f23938082b3aa45ffb6a84138758e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "symfony/filesystem": "~2.8"
+            },
+            "require-dev": {
+                "m1/env": "2.*",
+                "phpunit/phpunit": "4.*",
+                "scrutinizer/ocular": "~1.1",
+                "silex/silex": "1.3.*",
+                "squizlabs/php_codesniffer": "^2.3",
+                "symfony/yaml": "~2.8",
+                "yosymfony/toml": "~0.3"
+            },
+            "suggest": {
+                "m1/env": "For loading of Env files",
+                "symfony/yaml": "For loading of YAML files",
+                "yosymfony/toml": "For loading of Toml files"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "M1\\Vars\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Miles Croxford",
+                    "email": "hello@milescroxford.com",
+                    "homepage": "http://milescroxford.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Vars is a simple to use and easily extendable configuration loader with in built loaders for ini, json, PHP, toml, XML and yaml/yml file types. It also comes with in built support for Silex and more frameworks to come soon.",
+            "homepage": "https://github.com/m1/vars",
+            "keywords": [
+                "config",
+                "configuration",
+                "croxford",
+                "ini",
+                "json",
+                "loader",
+                "miles",
+                "php",
+                "provider",
+                "service",
+                "silex",
+                "toml",
+                "vars",
+                "xml",
+                "yml"
+            ],
+            "time": "2016-01-19 19:44:28"
+        },
+        {
             "name": "monolog/monolog",
             "version": "1.17.2",
             "source": {
@@ -1605,6 +1727,55 @@
                 }
             ],
             "description": "Symfony EventDispatcher Component",
+            "homepage": "https://symfony.com",
+            "time": "2016-01-13 10:28:07"
+        },
+        {
+            "name": "symfony/filesystem",
+            "version": "v2.8.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/filesystem.git",
+                "reference": "637b64d0ee10f44ae98dbad651b1ecdf35a11e8c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/637b64d0ee10f44ae98dbad651b1ecdf35a11e8c",
+                "reference": "637b64d0ee10f44ae98dbad651b1ecdf35a11e8c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Filesystem\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
             "time": "2016-01-13 10:28:07"
         },

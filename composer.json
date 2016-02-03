@@ -15,7 +15,7 @@
     "sorien/silex-pimple-dumper": "1.0.3",
     "jdesrosiers/silex-swagger-provider": "1.2.0",
     "jdesrosiers/silex-cors-provider": "0.1.5",
-    "igorw/config-service-provider": "1.2.2"
+    "m1/vars": "1.0.0"
   },
   "autoload": {
     "psr-4": {
