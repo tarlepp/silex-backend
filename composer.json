@@ -8,7 +8,7 @@
     "netresearch/jsonmapper": "0.10.0",
     "monolog/monolog": "1.17.2",
     "cnam/security-jwt-service-provider": "1.1.0",
-    "doctrine/dbal": "2.5",
+    "doctrine/dbal": "2.5.4",
     "doctrine/migrations": "1.0.0",
     "kurl/silex-doctrine-migrations-provider": "0.2.0",
     "dflydev/doctrine-orm-service-provider": "1.0.7",
