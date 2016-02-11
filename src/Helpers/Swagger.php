@@ -2,7 +2,9 @@
 /**
  * /src/Helpers/Swagger.php
  *
- * @author  TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
+ * @category    Helper
+ * @package     Helpers
+ * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
 namespace Helpers;
 
@@ -10,103 +12,73 @@ namespace Helpers;
 use Swagger\Annotations as SWG;
 
 /**
- * Class Swagger
+ * Base definitions for Swagger integration.
  *
- * This isn't a real class, basically this "class" only contains some generic Swagger
+ * @SWG\Swagger(
+ *      schemes={"http", "https"},
+ *      consumes={"application/json"},
+ *      produces={"application/json"},
+ *      @SWG\Info(
+ *           title="silex-backend",
+ *           description="Swagger API documentation for application",
+ *           version="1.0.0",
+ *           @SWG\Contact(
+ *               email="tarmo.leppanen@protacon.com",
+ *               name="Tarmo Leppänen",
+ *               url="https://github.com/tarlepp/silex-backend"
+ *           ),
+ *           @SWG\License(
+ *               name="MIT",
+ *               url="https://github.com/tarlepp/silex-backend/blob/master/LICENSE"
+ *           )
+ *      )
+ *  )
  *
- * @category    Helper
- * @package     Helpers
- * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
+ * @SWG\Definition(
+ *      definition="Authorization",
+ *      type="object",
+ *      required={"token"},
+ *      @SWG\Property(
+ *          property="token",
+ *          type="string",
+ *      ),
+ *      example={
+ *          "token": "JWT TOKEN HERE"
+ *      },
+ *  )
+ *
+ * @SWG\Definition(
+ *      definition="HeaderAuthorization",
+ *      type="string",
+ *      @SWG\Property(
+ *          property="Authorization",
+ *          type="string",
+ *      ),
+ *      example="Authorization: bearer JWT_TOKEN_HERE"
+ *  )
+ *
+ * @SWG\Definition(
+ *      definition="ErrorResponse",
+ *      type="object",
+ *      required={
+ *          "message",
+ *      },
+ *      @SWG\Property(
+ *          property="message",
+ *          type="string",
+ *      ),
+ *      @SWG\Property(
+ *          property="status",
+ *          type="integer",
+ *      ),
+ *      @SWG\Property(
+ *          property="code",
+ *          type="integer",
+ *      ),
+ *      example={
+ *          "message": "Error message",
+ *          "status": "4xx or 5xx [optional]",
+ *          "code": "error coder [optional]"
+ *      }
+ *  )
  */
-class Swagger
-{
-    /**
-     * Responses
-     *
-     * @SWG\ResponseMessage(
-     *      partial="Error400",
-     *      code=400,
-     *      message={
-     *          "message": "Invalid data",
-     *          "status": 400,
-     *          "code": 0,
-     *      }
-     *  )
-     *
-     * @SWG\ResponseMessage(
-     *      partial="Error401",
-     *      code=401,
-     *      message={
-     *          "message": "Unauthorized",
-     *          "status": 401,
-     *          "code": 0,
-     *      }
-     *  )
-     *
-     * @SWG\ResponseMessage(
-     *      partial="Error404",
-     *      code=401,
-     *      message={
-     *          "message": "Not found",
-     *          "status": 404,
-     *          "code": 0,
-     *      }
-     *  )
-     *
-     * @SWG\ResponseMessage(
-     *      partial="ErrorJWT",
-     *      code=401,
-     *      message={
-     *          "message": "A Token was not found in the TokenStorage.",
-     *      },
-     *  )
-     */
-
-    /**
-     * Parameters
-     *
-     * @SWG\Parameter(
-     *      partial="Authorization",
-     *      name="Authorization",
-     *      description="JWT header that is needed for protected API endpoints. Example value: 'Bearer put_jwt_token_here'",
-     *      paramType="header",
-     *      required=true,
-     *      allowMultiple=false,
-     *      type="string",
-     *  )
-     *
-     * @SWG\Parameter(
-     *      partial="Credentials",
-     *      name="credentials",
-     *      description="JSON object that contains necessary credential data.",
-     *      paramType="body",
-     *      required=true,
-     *      allowMultiple=false,
-     *      type="Login",
-     *  )
-     *
-     * @SWG\Parameter(
-     *      partial="QueryIdentifier",
-     *      name="id",
-     *      description="Object ID",
-     *      paramType="path",
-     *      required=true,
-     *      allowMultiple=false,
-     *      type="integer",
-     *  )
-     */
-
-    /**
-     * Models
-     *
-     * @SWG\Model(
-     *      id="Authorization",
-     *      description="JSON object whi",
-     *  )
-     *
-     * @SWG\Property(
-     *      name="token",
-     *      type="string",
-     *  )
-     */
-}

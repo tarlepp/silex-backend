@@ -7,6 +7,8 @@
 namespace App;
 
 // Silex application
+use App\Components\Swagger\SwaggerServiceProvider;
+use App\Providers\SecurityServiceProvider as ApplicationSecurityServiceProvider;
 use Silex\Application as SilexApplication;
 
 // Silex specified providers
@@ -19,13 +21,14 @@ use Silex\Provider\ValidatorServiceProvider;
 // 3rd party providers
 use Dflydev\Silex\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
 use JDesrosiers\Silex\Provider\CorsServiceProvider;
-use JDesrosiers\Silex\Provider\SwaggerServiceProvider;
 use Sorien\Provider\PimpleDumpProvider;
 use M1\Vars\Provider\Silex\VarsServiceProvider;
 
 // Application specified providers
 use App\Providers\UserProvider;
 use App\Services\Loader;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**
  * Class Application
@@ -142,16 +145,30 @@ class Application extends SilexApplication
      */
     private function applicationRegister()
     {
+        $this['dispatcher']->addListener("kernel.exception", function(GetResponseForExceptionEvent $event) {
+            if (
+                ($event->getException()->getCode() == '403') ||
+                ($event->getException()->getCode() == '404')
+            ) {
+                $request = $event->getRequest();
+
+                if ($request->isXmlHttpRequest()) {
+                    $event->setResponse(new Response("Access Denied", 403));
+                }
+            }
+        });
+
         // Register all providers for application
         $this->register(new ValidatorServiceProvider());
         $this->register(new SecurityServiceProvider());
+        $this->register(new ApplicationSecurityServiceProvider());
         $this->register(new SecurityJWTServiceProvider());
         $this->register(new PimpleDumpProvider());
         $this->register(new MonologServiceProvider(), $this['vars']->get('monolog'));
         $this->register(new DoctrineServiceProvider(), $this['vars']->get('database'));
         $this->register(new DoctrineOrmServiceProvider(), $this['vars']->get('orm'));
-        $this->register(new SwaggerServiceProvider(), $this['vars']->get('swagger'));
         $this->register(new CorsServiceProvider(), $this['vars']->get('cors'));
+        $this->register(new SwaggerServiceProvider(), $this['vars']->get('swagger'));
     }
 
     /**
@@ -164,9 +181,10 @@ class Application extends SilexApplication
     private function applicationFirewall()
     {
         $entityManager = $this['orm.em'];
+        $app = $this;
 
         // Set provider for application users
-        $this['users'] = function() use ($entityManager) {
+        $this['users'] = function() use ($app, $entityManager) {
             return new UserProvider($entityManager);
         };
 
@@ -187,9 +205,13 @@ class Application extends SilexApplication
                 'pattern'   => '^/_dump$',
                 'anonymous' => true,
             ],
+            // CORS preflight requests
+            'cors-preflight' => array(
+                'pattern' => $this['cors_preflight_request_matcher'],
+            ),
             // API docs are also anonymous
             'docs' => [
-                'pattern'   => '^/api/api-docs',
+                'pattern'   => '^/api',
                 'anonymous' => true,
             ],
             // And all other routes
