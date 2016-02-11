@@ -18,10 +18,19 @@ use Swagger\Annotations as SWG;
  *
  * Model class for login process, this is needed to just validate user input.
  *
- * @SWG\Model(
- *     id="Login",
- *     description="JSON object for login"
- * )
+ * @SWG\Definition(
+ *      title="Login data",
+ *      description="JSON object for login",
+ *      type="object",
+ *      required={
+ *          "identifier",
+ *          "password"
+ *      },
+ *      example={
+ *          "identifier": "user identifier",
+ *          "password": "user password",
+ *      },
+ *  )
  *
  * @category    Model
  * @package     App\Models
@@ -30,26 +39,22 @@ use Swagger\Annotations as SWG;
 class Login
 {
     /**
-     * @SWG\Property(
-     *      name="identifier",
-     *      type="string",
-     *      description="User identifier; email or username"
-     *  )
+     * User identifier; email or username
      *
      * @var string
+     *
+     * @SWG\Property()
      */
-    public $identifier;
+    private $identifier;
 
     /**
-     *  @SWG\Property(
-     *      name="password",
-     *      type="string",
-     *      description="User password"
-     *  )
+     * User password.
      *
      * @var string
+     *
+     * @SWG\Property()
      */
-    public $password;
+    private $password;
 
     /**
      * Validator definitions for 'login' model
@@ -60,5 +65,45 @@ class Login
     {
         $metadata->addPropertyConstraint('identifier', new Assert\NotBlank());
         $metadata->addPropertyConstraint('password', new Assert\NotBlank());
+    }
+
+    /**
+     * Getter method for 'identifier' attribute.
+     *
+     * @return  string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * Getter method for 'password' attribute.
+     *
+     * @return  string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Setter method for 'identifier' attribute.
+     *
+     * @param   string  $identifier
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+    }
+
+    /**
+     * Setter method for 'password' attribute.
+     *
+     * @param   string  $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
     }
 }
