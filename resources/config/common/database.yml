@@ -41,6 +41,6 @@ orm:
       type:                         annotation
       namespace:                    App\Entities
       path:                         %rootDir%src/App/Entities
-      use_simple_annotation_reader: true
+      use_simple_annotation_reader: false
 
   proxies_dir: %rootDir%var/orm/proxies
