@@ -29,12 +29,7 @@ monolog:
 # https://github.com/jdesrosiers/silex-swagger-provider#parameters
 #
 swagger:
-  swagger.srcDir:       %rootDir%vendor/zircote/swagger-php/library
-  swagger.servicePath:  %rootDir%src
-  swagger.excludePath:
-    - %rootDir%src/App/Console/
-    - %rootDir%src/App/Core/
-    - %rootDir%src/App/Providers/
-    - %rootDir%src/App/Services/
+  srcDir: %rootDir%vendor/zircote/swagger-php/src
+  servicePath: %rootDir%src
 
 pimpledump.output_dir: %rootDir%var
