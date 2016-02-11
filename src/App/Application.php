@@ -6,29 +6,33 @@
  */
 namespace App;
 
-// Silex application
+// Application components
 use App\Components\Swagger\SwaggerServiceProvider;
+use App\Providers\UserProvider;
 use App\Providers\SecurityServiceProvider as ApplicationSecurityServiceProvider;
-use Silex\Application as SilexApplication;
+use App\Services\Loader;
 
-// Silex specified providers
+// Silex components
+use Silex\Application as SilexApplication;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\SecurityJWTServiceProvider;
 use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 
-// 3rd party providers
+// 3rd components
 use Dflydev\Silex\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
 use JDesrosiers\Silex\Provider\CorsServiceProvider;
 use Sorien\Provider\PimpleDumpProvider;
 use M1\Vars\Provider\Silex\VarsServiceProvider;
 
-// Application specified providers
-use App\Providers\UserProvider;
-use App\Services\Loader;
+// Symfony components
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Class Application
@@ -145,16 +149,28 @@ class Application extends SilexApplication
      */
     private function applicationRegister()
     {
-        $this['dispatcher']->addListener("kernel.exception", function(GetResponseForExceptionEvent $event) {
-            if (
-                ($event->getException()->getCode() == '403') ||
-                ($event->getException()->getCode() == '404')
-            ) {
-                $request = $event->getRequest();
+        // Todo move this somewhere else!
+        $this['dispatcher']->addListener('kernel.exception', function(GetResponseForExceptionEvent $event) {
+            $exception = $event->getException();
 
-                if ($request->isXmlHttpRequest()) {
-                    $event->setResponse(new Response("Access Denied", 403));
-                }
+            if ($exception instanceof AuthenticationException ||
+                $exception instanceof AccessDeniedException ||
+                $exception instanceof AuthenticationCredentialsNotFoundException ||
+                $exception->getPrevious() instanceof AuthenticationException ||
+                $exception->getPrevious() instanceof AccessDeniedException ||
+                $exception->getPrevious() instanceof AuthenticationCredentialsNotFoundException
+            ) {
+                $responseData = [
+                    'status'    => method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 401,
+                    'message'   => $exception->getMessage(),
+                    'code'      => $exception->getCode(),
+                ];
+
+                $response = new JsonResponse();
+                $response->setData($responseData);
+                $response->setStatusCode($responseData['status']);
+
+                $event->setResponse($response);
             }
         });
 
