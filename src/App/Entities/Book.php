@@ -6,14 +6,32 @@
  */
 namespace App\Entities;
 
+// Native components
+use JsonSerializable;
+
+// Symfony components
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
+
+// Doctrine components
 use Doctrine\ORM\Mapping as ORM;
+
+// 3rd party components
+use Swagger\Annotations as SWG;
 
 /**
  * Class Book
  *
- * @SWG\Model(
- *     id="BookEntity",
- *     description="Book object"
+ * @SWG\Definition(
+ *      title="Book",
+ *      description="Book data as in JSON object",
+ *      type="object",
+ *      required={
+ *          "title",
+ *          "description",
+ *          "releaseDate",
+ *          "author"
+ *      },
  * )
  *
  * @ORM\Table(
@@ -25,17 +43,14 @@ use Doctrine\ORM\Mapping as ORM;
  * @package     App\Entities
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
-class Book
+class Book extends Base implements JsonSerializable
 {
     /**
+     * Book ID
+     *
      * @var integer
      *
-     * @SWG\Property(
-     *      name="id",
-     *      type="integer",
-     *      description="ID"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\Column(
      *      name="id",
      *      type="integer",
@@ -44,17 +59,14 @@ class Book
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    public $id;
+    private $id;
 
     /**
+     * Book title
+     *
      * @var string
      *
-     * @SWG\Property(
-     *      name="title",
-     *      type="integer",
-     *      description="Title"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\Column(
      *      name="title",
      *      type="string",
@@ -62,51 +74,40 @@ class Book
      *      nullable=false
      *  )
      */
-    public $title;
+    private $title;
 
     /**
+     * Description
+     *
      * @var string
      *
-     * @SWG\Property(
-     *      name="description",
-     *      type="string",
-     *      description="Description"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\Column(
      *      name="description",
      *      type="text",
      *      nullable=false
      *  )
      */
-    public $description;
+    private $description;
 
     /**
+     * Release date of book
+     *
      * @var \DateTime
      *
-     * @SWG\Property(
-     *      name="releaseDate",
-     *      type="string",
-     *      description="Release date"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\Column(
      *      name="releaseDate",
      *      type="date",
      *      nullable=false
      *  )
      */
-    public $releasedate;
+    private $releaseDate;
 
     /**
      * @var \App\Entities\Author
      *
-     * @SWG\Property(
-     *      name="author",
-     *      type="AuthorEntity",
-     *      description="Author"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\ManyToOne(targetEntity="App\Entities\Author")
      * @ORM\JoinColumns({
      *      @ORM\JoinColumn(
@@ -115,5 +116,90 @@ class Book
      *      )
      *  })
      */
-    public $author;
+    private $author;
+
+    /**
+     * Validator definitions for 'Book' entity
+     *
+     * @param   ClassMetadata   $metadata
+     *
+     * @return  void
+     */
+    static public function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('title', new Assert\NotBlank());
+        $metadata->addPropertyConstraint('description', new Assert\NotBlank());
+        $metadata->addPropertyConstraint('releaseDate', new Assert\NotBlank());
+        $metadata->addPropertyConstraint('releaseDate', new Assert\Date());
+        $metadata->addPropertyConstraint('author', new Assert\NotBlank());
+    }
+
+    /**
+     * Getter method for 'id' attribute.
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Getter method for 'title' attribute.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Getter method for 'description' attribute.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Getter method for 'releaseDate' attribute.
+     *
+     * @return \DateTime
+     */
+    public function getReleaseDate()
+    {
+        return $this->releaseDate;
+    }
+
+    /**
+     * Getter method for 'author' attribute.
+     *
+     * @return Author
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     *
+     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     *        which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'id'            => $this->id,
+            'title'         => $this->title,
+            'description'   => $this->description,
+            'releaseDate'   => $this->releaseDate,
+            'author'        => $this->author,
+        );
+    }
 }

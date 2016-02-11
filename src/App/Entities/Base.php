@@ -6,6 +6,9 @@
  */
 namespace App\Entities;
 
+// Doctrine components
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Class Base
  *

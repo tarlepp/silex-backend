@@ -6,6 +6,9 @@
  */
 namespace App\Entities;
 
+// Native components
+use JsonSerializable;
+
 // Symfony components
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,9 +22,19 @@ use Swagger\Annotations as SWG;
 /**
  * Class Author
  *
- * @SWG\Model(
- *     id="AuthorEntity",
- *     description="Author object"
+ * @SWG\Definition(
+ *      title="Author",
+ *      description="Author data as in JSON object",
+ *      type="object",
+ *      required={
+ *          "name",
+ *          "description",
+ *      },
+ *      example={
+ *          "id": 1,
+ *          "name": "J. R. R. Tolkien",
+ *          "description": "John Ronald Reuel Tolkien, CBE (/ˈtɒlkiːn/ tol-keen; 3 January 1892 – 2 September 1973)",
+ *      },
  * )
  *
  * @ORM\Table(
@@ -33,17 +46,14 @@ use Swagger\Annotations as SWG;
  * @package     App\Entities
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
-class Author extends Base
+class Author extends Base implements JsonSerializable
 {
     /**
+     * Author ID
+     *
      * @var integer
      *
-     * @SWG\Property(
-     *      name="id",
-     *      type="integer",
-     *      description="ID"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\Column(
      *      name="id",
      *      type="integer",
@@ -52,17 +62,14 @@ class Author extends Base
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    public $id;
+    private $id;
 
     /**
+     * Author name
+     *
      * @var string
      *
-     * @SWG\Property(
-     *      name="name",
-     *      type="integer",
-     *      description="Name"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\Column(
      *      name="name",
      *      type="string",
@@ -70,24 +77,44 @@ class Author extends Base
      *      nullable=false
      *  )
      */
-    public $name;
+    private $name;
 
     /**
+     * Description
+     *
      * @var string
      *
-     * @SWG\Property(
-     *      name="description",
-     *      type="string",
-     *      description="Description"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\Column(
      *      name="description",
      *      type="text",
      *      nullable=false
      *  )
      */
-    public $description;
+    private $description;
+
+    /**
+     * Validator definitions for 'Author' entity
+     *
+     * @param   ClassMetadata   $metadata
+     *
+     * @return  void
+     */
+    static public function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('name', new Assert\NotBlank());
+        $metadata->addPropertyConstraint('description', new Assert\NotBlank());
+    }
+
+    /**
+     * Getter for 'id' attribute.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Getter for 'name' attribute.
@@ -97,16 +124,6 @@ class Author extends Base
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Setter for 'name' attribute.
-     *
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
     }
 
     /**
@@ -120,6 +137,16 @@ class Author extends Base
     }
 
     /**
+     * Setter for 'name' attribute.
+     *
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
      * Setter for 'description' attribute.
      *
      * @param string $description
@@ -130,13 +157,19 @@ class Author extends Base
     }
 
     /**
-     * Validator definitions for 'Author' entity
+     * Specify data which should be serialized to JSON
      *
-     * @param   ClassMetadata   $metadata
+     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
+     * @return  array   data which can be serialized by <b>json_encode</b>, which is a value of any type other than a
+     *                  resource.
      */
-    static public function loadValidatorMetadata(ClassMetadata $metadata)
+    public function jsonSerialize()
     {
-        $metadata->addPropertyConstraint('name', new Assert\NotBlank());
-        $metadata->addPropertyConstraint('description', new Assert\NotBlank());
+        return array(
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'description'   => $this->description,
+        );
     }
 }

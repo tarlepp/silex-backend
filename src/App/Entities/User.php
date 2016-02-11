@@ -6,44 +6,66 @@
  */
 namespace App\Entities;
 
+// Native components
+use JsonSerializable;
+
 // Symfony components
 use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 // Doctrine components
 use Doctrine\ORM\Mapping as ORM;
 
 // 3rd party components
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Swagger\Annotations as SWG;
 
 /**
- * User
+ * Class User
  *
- * @SWG\Model(
- *     id="UserEntity",
- *     description="User object"
+ * @SWG\Definition(
+ *      title="User",
+ *      description="User data as in JSON object",
+ *      type="object",
+ *      required={
+ *          "username",
+ *          "firstname",
+ *          "surname",
+ *          "email",
+ *      },
+ *      example={
+ *          "id": 1,
+ *          "username": "admin",
+ *          "firstname": "Arnold",
+ *          "surname": "Administrator",
+ *          "email": "arnold@foobar.com",
+ *      },
  * )
  *
  * @ORM\Table(
  *      name="user",
  *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="uq_username", columns={"username"}),
- *          @ORM\UniqueConstraint(name="uq_email", columns={"email"})
- *      }
+ *          @ORM\UniqueConstraint(
+ *              name="uq_username",
+ *              columns={"username"}
+ *          ),
+ *          @ORM\UniqueConstraint(
+ *              name="uq_email",
+ *              columns={"email"}
+ *          ),
+ *      },
  *  )
  * @ORM\Entity
+ *
+ * @package App\Entities
  */
-class User extends Base implements AdvancedUserInterface, \Serializable
+class User extends Base implements AdvancedUserInterface, JsonSerializable
 {
     /**
+     * User ID
+     *
      * @var integer
      *
-     * @SWG\Property(
-     *      name="id",
-     *      type="integer",
-     *      description="ID"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\Column(
      *      name="id",
      *      type="integer",
@@ -52,17 +74,14 @@ class User extends Base implements AdvancedUserInterface, \Serializable
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    public $id;
+    private $id;
 
     /**
+     * Username
+     *
      * @var string
      *
-     * @SWG\Property(
-     *      name="username",
-     *      type="string",
-     *      description="Username"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\Column(
      *      name="username",
      *      type="string",
@@ -70,17 +89,14 @@ class User extends Base implements AdvancedUserInterface, \Serializable
      *      nullable=false
      *  )
      */
-    public $username;
+    private $username;
 
     /**
+     * Firstname
+     *
      * @var string
      *
-     * @SWG\Property(
-     *      name="firstname",
-     *      type="string",
-     *      description="Firstname"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\Column(
      *      name="firstname",
      *      type="string",
@@ -88,17 +104,14 @@ class User extends Base implements AdvancedUserInterface, \Serializable
      *      nullable=false
      *  )
      */
-    public $firstname;
+    private $firstname;
 
     /**
+     * Surname
+     *
      * @var string
      *
-     * @SWG\Property(
-     *      name="surname",
-     *      type="string",
-     *      description="Surname"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\Column(
      *      name="surname",
      *      type="string",
@@ -106,17 +119,14 @@ class User extends Base implements AdvancedUserInterface, \Serializable
      *      nullable=false
      *  )
      */
-    public $surname;
+    private $surname;
 
     /**
+     * Email address
+     *
      * @var string
      *
-     * @SWG\Property(
-     *      name="email",
-     *      type="string",
-     *      description="Email address"
-     *  )
-     *
+     * @SWG\Property()
      * @ORM\Column(
      *      name="email",
      *      type="string",
@@ -124,7 +134,7 @@ class User extends Base implements AdvancedUserInterface, \Serializable
      *      nullable=false
      *  )
      */
-    public $email;
+    private $email;
 
     /**
      * @var string
@@ -141,13 +151,6 @@ class User extends Base implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @SWG\Property(
-     *      name="roles",
-     *      description="User roles",
-     *      type="array",
-     *      enum="['ROLE_ADMIN','ROLE_USER']"
-     *  )
-     *
      * @ORM\Column(
      *      name="roles",
      *      type="string",
@@ -155,7 +158,7 @@ class User extends Base implements AdvancedUserInterface, \Serializable
      *      nullable=false
      *  )
      */
-    public $roles;
+    private $roles;
 
     /**
      * Getter method for current user ID.
@@ -320,34 +323,6 @@ class User extends Base implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * String representation of object
-     *
-     * @link    http://php.net/manual/en/serializable.serialize.php
-     *
-     * @return  string the string representation of the object or null
-     */
-    public function serialize()
-    {
-        return serialize([
-            $this->id,
-        ]);
-    }
-
-    /**
-     * Constructs the object
-     *
-     * @link    http://php.net/manual/en/serializable.unserialize.php
-     *
-     * @param   string $serialized The string representation of the object.
-     *
-     * @return  void
-     */
-    public function unserialize($serialized)
-    {
-        list($this->id) = unserialize($serialized);
-    }
-
-    /**
      * Getter method for user identifier, this can be username or email.
      *
      * @todo    How to determine which one this is?
@@ -357,5 +332,25 @@ class User extends Base implements AdvancedUserInterface, \Serializable
     public function getIdentifier()
     {
         return $this->username;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     *
+     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
+     * @return  array   data which can be serialized by <b>json_encode</b>, which is a value of any type other than a
+     *                  resource.
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'id'        => $this->id,
+            'username'  => $this->username,
+            'firstname' => $this->firstname,
+            'surname'   => $this->surname,
+            'email'     => $this->email,
+            'roles'     => $this->getRoles(),
+        );
     }
 }
