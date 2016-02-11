@@ -24,11 +24,6 @@ use Swagger\Annotations as SWG;
  *  POST    /auth/login
  *  GET     /auth/profile
  *
- * @SWG\Resource(
- *      resourcePath="/auth",
- *      description="User authentication API endpoints.",
- *  )
- *
  * @category    Controller
  * @package     App\Controllers
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
@@ -49,16 +44,34 @@ class AuthController extends Base
     /**
      * User login action which returns JSON Web Token (JWT) on valid request.
      *
-     * @SWG\Api(
-     *      path="/login",
-     *      @SWG\Operations(
-     *          @SWG\Operation(
-     *              method="POST",
-     *              type="Authorization",
-     *              @SWG\Partial("Credentials"),
-     *              @SWG\Partial("Error400"),
-     *              @SWG\Partial("Error401"),
-     *          ),
+     * @SWG\Post(
+     *      path="/auth/login",
+     *      @SWG\Parameter(
+     *          name="credentials",
+     *          in="body",
+     *          description="User login credentials",
+     *          required=true,
+     *          @SWG\Schema(ref="#/definitions/Login"),
+     *      ),
+     *      @SWG\Response(
+     *          response=200,
+     *          description="Login JWT response",
+     *          @SWG\Schema(ref="#/definitions/Authorization"),
+     *      ),
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Invalid data",
+     *          @SWG\Schema(ref="#/definitions/ErrorResponse"),
+     *      ),
+     *      @SWG\Response(
+     *          response=401,
+     *          description="Unauthorized",
+     *          @SWG\Schema(ref="#/definitions/ErrorResponse"),
+     *      ),
+     *      @SWG\Response(
+     *          response=500,
+     *          description="Server error",
+     *          @SWG\Schema(ref="#/definitions/ErrorResponse"),
      *      ),
      *  )
      *
@@ -89,10 +102,10 @@ class AuthController extends Base
 
         // Catch all errors on user fetch and send just 401 if something fails
         try {
-            $user = $this->app['users']->loadUserByUsername($login->identifier);
+            $user = $this->app['users']->loadUserByUsername($login->getIdentifier());
 
-            if ($user->verifyPassword($login->password)) {
-                $userData = (array)$user;
+            if ($user->verifyPassword($login->getPassword())) {
+                $userData = $user->jsonSerialize();
                 $userData['identifier'] = $user->getIdentifier();
 
                 // Return token response
@@ -108,16 +121,30 @@ class AuthController extends Base
     /**
      * Return current user public profile data.
      *
-     * @SWG\Api(
-     *      path="/profile",
-     *      @SWG\Operations(
-     *          @SWG\Operation(
-     *              method="GET",
-     *              type="UserEntity",
-     *              @SWG\Partial("Authorization"),
-     *              @SWG\Partial("Error401"),
-     *              @SWG\Partial("ErrorJWT"),
-     *          ),
+     * @SWG\Get(
+     *      path="/auth/profile",
+     *      @SWG\Parameter(
+     *          name="Authorization",
+     *          in="header",
+     *          description="JWT authorization header",
+     *          type="string",
+     *          required=true,
+     *          @SWG\Schema(ref="#/definitions/HeaderAuthorization"),
+     *      ),
+     *      @SWG\Response(
+     *          response=200,
+     *          description="Logged in user profile",
+     *          @SWG\Schema(ref="#/definitions/User"),
+     *      ),
+     *      @SWG\Response(
+     *          response=401,
+     *          description="Unauthorized",
+     *          @SWG\Schema(ref="#/definitions/ErrorResponse"),
+     *      ),
+     *      @SWG\Response(
+     *          response=500,
+     *          description="Server error",
+     *          @SWG\Schema(ref="#/definitions/ErrorResponse"),
      *      ),
      *  )
      *

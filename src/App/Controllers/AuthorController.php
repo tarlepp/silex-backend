@@ -6,8 +6,10 @@
  */
 namespace App\Controllers;
 
-// Symfony components
+// Application components
 use App\Services\AuthorService;
+
+// Symfony components
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Exception\ValidatorException;
@@ -17,96 +19,6 @@ use Swagger\Annotations as SWG;
 
 /**
  * Class AuthorController
- *
- * @SWG\Resource(
- *      resourcePath="/author",
- *      description="Author API endpoints.",
- *  )
- *
- * @SWG\Api(
- *      path="",
- *      @SWG\Operations(
- *          @SWG\Operation(
- *              method="GET",
- *              nickname="find",
- *              summary="Returns all authors from database as an array of 'AuthorEntity' objects.",
- *              type="array",
- *              @SWG\Items("AuthorEntity"),
- *              @SWG\Partial("Authorization"),
- *              @SWG\Partial("ErrorJWT"),
- *              @SWG\Partial("Error401"),
- *          ),
- *      ),
- *  )
- *
- * @SWG\Api(
- *      path="/",
- *      @SWG\Operations(
- *          @SWG\Operation(
- *              method="POST",
- *              nickname="create",
- *              type="AuthorEntity",
- *              @SWG\Partial("Authorization"),
- *              @SWG\Parameter(
- *                  name="request data",
- *                  description="JSON object that contains new author data.",
- *                  paramType="body",
- *                  required=true,
- *                  allowMultiple=false,
- *                  type="AuthorEntity",
- *              ),
- *              @SWG\Partial("ErrorJWT"),
- *              @SWG\Partial("Error400"),
- *          ),
- *      ),
- *  )
- *
- * @SWG\Api(
- *      path="/{id}",
- *      description="Route to provide single author get, update and delete functions.",
- *      @SWG\Operations(
- *          @SWG\Operation(
- *              method="GET",
- *              nickname="findOne",
- *              summary="Returns single 'AuthorEntity' object presenting given id value.",
- *              type="AuthorEntity",
- *              @SWG\Partial("Authorization"),
- *              @SWG\Partial("QueryIdentifier"),
- *              @SWG\Partial("ErrorJWT"),
- *              @SWG\Partial("Error401"),
- *              @SWG\Partial("Error404"),
- *          ),
- *          @SWG\Operation(
- *              method="PUT",
- *              nickname="update",
- *              summary="Updates specified 'AuthorEntity' object with given data.",
- *              type="AuthorEntity",
- *              @SWG\Partial("Authorization"),
- *              @SWG\Partial("QueryIdentifier"),
- *              @SWG\Parameter(
- *                  name="request data",
- *                  description="JSON object that contains updated author data.",
- *                  paramType="body",
- *                  required=true,
- *                  allowMultiple=false,
- *                  type="AuthorEntity",
- *              ),
- *              @SWG\Partial("ErrorJWT"),
- *              @SWG\Partial("Error400"),
- *              @SWG\Partial("Error404"),
- *          ),
- *          @SWG\Operation(
- *              method="DELETE",
- *              nickname="delete",
- *              summary="Deletes single 'AuthorEntity' object from database.",
- *              @SWG\Partial("Authorization"),
- *              @SWG\Partial("QueryIdentifier"),
- *              @SWG\Partial("ErrorJWT"),
- *              @SWG\Partial("Error401"),
- *              @SWG\Partial("Error404"),
- *          ),
- *      ),
- *  )
  *
  * @category    Controller
  * @package     App\Controllers
