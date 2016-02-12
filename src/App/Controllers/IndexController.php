@@ -6,6 +6,9 @@
  */
 namespace App\Controllers;
 
+// Symfony components
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Class IndexController
  *
@@ -31,10 +34,12 @@ class IndexController extends Base
     /**
      * Index action handling, this will just redirect user to API docs.
      *
-     * @return string
+     * @param   Request $request
+     *
+     * @return  string
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->app->redirect('api/api-docs');
+        return $this->app->redirect($request->getBasePath() . '/api-docs');
     }
 }
