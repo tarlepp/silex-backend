@@ -120,6 +120,8 @@ class Application extends SilexApplication
      */
     private function applicationConfig()
     {
+        $this->checkEnvironmentVariables();
+
         // Register configuration provider
         $this->register(
             new VarsServiceProvider($this->rootDir . 'resources/config/' . $this->env . '/config.yml'),
@@ -263,5 +265,34 @@ class Application extends SilexApplication
     {
         $loader = new Loader($this);
         $loader->bindServicesIntoContainer();
+    }
+
+    /**
+     * Helper method to set defaults to ENV variables. These are needed for easy environment specified overrides for
+     * these values.
+     *
+     * Note that atm this only supports database connection options and nothing else.
+     *
+     * @todo What else variables should be in ENV?
+     *
+     * @return  void
+     */
+    private function checkEnvironmentVariables()
+    {
+        // Supported ENV vars and default values for those
+        $vars = [
+            'DATABASE_DB_OPTIONS_DRIVER'    => 'pdo_mysql',
+            'DATABASE_DB_OPTIONS_HOST'      => 'localhost',
+            'DATABASE_DB_OPTIONS_DBNAME'    => 'silex_backend',
+            'DATABASE_DB_OPTIONS_USER'      => 'silex',
+            'DATABASE_DB_OPTIONS_PASSWORD'  => 'silex',
+            'DATABASE_DB_OPTIONS_CHARSET'   => 'utf8mb4',
+        ];
+
+        foreach ($vars as $key => $value) {
+            if (getenv($key) === false) { // Fallback to default value
+                putenv($key . '=' . $value);
+            }
+        }
     }
 }
