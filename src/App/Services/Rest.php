@@ -100,13 +100,16 @@ class Rest extends Base implements Interfaces\Rest
      * Generic find method to return an array of items from database. Return value is an array of specified repository
      * entities.
      *
-     * @todo How to handle WHERE condition?
+     * @param   array           $criteria
+     * @param   null|array      $orderBy
+     * @param   null|integer    $limit
+     * @param   null|integer    $offset
      *
      * @return  BaseEntity[]
      */
-    public function find()
+    public function find(array $criteria = [], array $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->getRepository()->findAll();
+        return $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
