@@ -38,7 +38,7 @@ class Loader
      *
      * @return  void
      */
-    public function bindServicesIntoContainer()
+    public function bindServices()
     {
         $this->app['author.service'] = $this->app->share(function() {
             return new AuthorService($this->app['db'], $this->app['orm.em'], $this->app['validator']);

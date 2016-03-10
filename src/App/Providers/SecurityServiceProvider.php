@@ -11,7 +11,7 @@ use App\Security\PreflightRequestMatcher;
 
 // Silex components
 use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Silex\Provider\SecurityServiceProvider as Base;
 
 /**
  * Class SecurityServiceProvider
@@ -20,7 +20,7 @@ use Silex\ServiceProviderInterface;
  * @package     App\Providers
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
-class SecurityServiceProvider implements ServiceProviderInterface
+class SecurityServiceProvider extends Base
 {
     /**
      * Registers services on the given app.
@@ -34,20 +34,8 @@ class SecurityServiceProvider implements ServiceProviderInterface
      */
     public function register(Application $app)
     {
-        $app['cors_preflight_request_matcher'] = new PreflightRequestMatcher($app);
-    }
+        parent::register($app);
 
-    /**
-     * Bootstraps the application.
-     *
-     * This method is called after all services are registered and should be used for "dynamic" configuration (whenever
-     * a service must be requested).
-     *
-     * @param   Application $app
-     *
-     * @return  void
-     */
-    public function boot(Application $app)
-    {
+        $app['cors_preflight_request_matcher'] = new PreflightRequestMatcher($app);
     }
 }

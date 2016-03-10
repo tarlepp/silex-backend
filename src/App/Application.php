@@ -10,7 +10,7 @@ namespace App;
 use App\Components\Swagger\SwaggerServiceProvider;
 use App\Doctrine\DBAL\Types\UTCDateTimeType;
 use App\Providers\UserProvider;
-use App\Providers\SecurityServiceProvider as ApplicationSecurityServiceProvider;
+use App\Providers\SecurityServiceProvider;
 use App\Services\Loader;
 
 // Silex components
@@ -18,7 +18,6 @@ use Silex\Application as SilexApplication;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\SecurityJWTServiceProvider;
-use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 
 // 3rd components
@@ -78,19 +77,22 @@ class Application extends SilexApplication
         parent::__construct();
 
         // Create application configuration
-        $this->applicationConfig();
+        $this->config();
+
+        // Attach application listeners
+        $this->listeners();
 
         // Register all necessary providers
-        $this->applicationRegister();
+        $this->providers();
 
         // Configure application firewall
-        $this->applicationFirewall();
+        $this->firewall();
 
         // Load services
-        $this->loadServices();
+        $this->services();
 
         // Attach application mount points
-        $this->applicationMount();
+        $this->mounts();
 
         // Configure database (DBAL + ORM)
         $this->doctrineConfig();
@@ -124,7 +126,7 @@ class Application extends SilexApplication
      *
      * @return  void
      */
-    private function applicationConfig()
+    protected function config()
     {
         $this->checkEnvironmentVariables();
 
@@ -151,13 +153,12 @@ class Application extends SilexApplication
     }
 
     /**
-     * Method to register all specified providers for application.
+     * Method to attach all necessary listeners to application.
      *
-     * @return  void
+     * @return void
      */
-    private function applicationRegister()
+    protected function listeners()
     {
-        // Todo move this somewhere else!
         $this['dispatcher']->addListener('kernel.exception', function(GetResponseForExceptionEvent $event) {
             $exception = $event->getException();
 
@@ -181,11 +182,17 @@ class Application extends SilexApplication
                 $event->setResponse($response);
             }
         });
+    }
 
-        // Register all providers for application
+    /**
+     * Method to register all specified providers for application.
+     *
+     * @return  void
+     */
+    protected function providers()
+    {
         $this->register(new ValidatorServiceProvider());
         $this->register(new SecurityServiceProvider());
-        $this->register(new ApplicationSecurityServiceProvider());
         $this->register(new SecurityJWTServiceProvider());
         $this->register(new PimpleDumpProvider());
         $this->register(new MonologServiceProvider(), $this['vars']->get('monolog'));
@@ -202,7 +209,7 @@ class Application extends SilexApplication
      *
      * @return  array
      */
-    private function applicationFirewall()
+    protected function firewall()
     {
         $entityManager = $this['orm.em'];
         $app = $this;
@@ -252,11 +259,22 @@ class Application extends SilexApplication
     }
 
     /**
+     * Load shared services.
+     *
+     * @return  void
+     */
+    protected function services()
+    {
+        $loader = new Loader($this);
+        $loader->bindServices();
+    }
+
+    /**
      * Method to attach main mount point to be handled via ControllerProvider.
      *
      * @return  void
      */
-    private function applicationMount()
+    protected function mounts()
     {
         // Register all application routes
         $this->mount('', new ControllerProvider());
@@ -271,22 +289,11 @@ class Application extends SilexApplication
      *
      * @return  void
      */
-    private function doctrineConfig()
+    protected function doctrineConfig()
     {
         // Override DateTime and DateTimeTz types
         Type::overrideType('datetime', UTCDateTimeType::class);
         Type::overrideType('datetimetz', UTCDateTimeType::class);
-    }
-
-    /**
-     * Load shared services.
-     *
-     * @return  void
-     */
-    private function loadServices()
-    {
-        $loader = new Loader($this);
-        $loader->bindServicesIntoContainer();
     }
 
     /**
