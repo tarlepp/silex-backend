@@ -231,6 +231,11 @@ class Application extends SilexApplication
                 'pattern'   => '^/auth/login$',
                 'anonymous' => true,
             ],
+            // Test route
+            'test' => [
+                'pattern'   => '^/test$',
+                'anonymous' => true,
+            ],
             // Pimple dump
             'pimpleDump' => [
                 'pattern'   => '^/_dump$',

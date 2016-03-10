@@ -29,6 +29,7 @@ class IndexController extends Base
     public function registerRoutes()
     {
         $this->app->get('/', [$this, 'index']);
+        $this->app->get('/test', [$this, 'test']);
     }
 
     /**
@@ -36,10 +37,25 @@ class IndexController extends Base
      *
      * @param   Request $request
      *
-     * @return  string
+     * @return  \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function index(Request $request)
     {
         return $this->app->redirect($request->getBasePath() . '/api-docs');
+    }
+
+    /**
+     * This is just for testing what ever you might wanna test. Note that this route is public so don't ever commit
+     * your changes to this :D
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function test(Request $request)
+    {
+        $params = $request->query->all();
+
+        return $this->app->json($params, 200);
     }
 }
