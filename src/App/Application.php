@@ -8,6 +8,7 @@ namespace App;
 
 // Application components
 use App\Components\Swagger\SwaggerServiceProvider;
+use App\Doctrine\DBAL\Types\UTCDateTimeType;
 use App\Providers\UserProvider;
 use App\Providers\SecurityServiceProvider as ApplicationSecurityServiceProvider;
 use App\Services\Loader;
@@ -27,12 +28,14 @@ use Sorien\Provider\PimpleDumpProvider;
 use M1\Vars\Provider\Silex\VarsServiceProvider;
 
 // Symfony components
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
+// Doctrine components
+use Doctrine\DBAL\Types\Type;
 
 /**
  * Class Application
@@ -88,6 +91,9 @@ class Application extends SilexApplication
 
         // Attach application mount points
         $this->applicationMount();
+
+        // Configure database (DBAL + ORM)
+        $this->doctrineConfig();
 
         // Attach CORS to application
         $this->after($this['cors']);
@@ -254,6 +260,22 @@ class Application extends SilexApplication
     {
         // Register all application routes
         $this->mount('', new ControllerProvider());
+    }
+
+    /**
+     * Method to configure Doctrine (DBAL + ORM). We'll need to do following steps here:
+     *  1) Override default datetime and datetimetz types with custom UTC datetime type
+     *      - To ensure that we're storing all the datetimes as in UTC time
+     *
+     * @throws  \Doctrine\DBAL\DBALException
+     *
+     * @return  void
+     */
+    private function doctrineConfig()
+    {
+        // Override DateTime and DateTimeTz types
+        Type::overrideType('datetime', UTCDateTimeType::class);
+        Type::overrideType('datetimetz', UTCDateTimeType::class);
     }
 
     /**
