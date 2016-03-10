@@ -58,7 +58,7 @@ use Swagger\Annotations as SWG;
  *
  * @package App\Entities
  */
-class User extends Base implements AdvancedUserInterface, JsonSerializable
+class User extends Base implements AdvancedUserInterface
 {
     /**
      * User ID
@@ -171,6 +171,65 @@ class User extends Base implements AdvancedUserInterface, JsonSerializable
     }
 
     /**
+     * Returns the username used to authenticate the user.
+     *
+     * @return string The username
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Getter method for user identifier, this can be username or email.
+     *
+     * @todo    How to determine which one this is?
+     *
+     * @return  string
+     */
+    public function getIdentifier()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstname()
+    {
+        return $this->firstname;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSurname()
+    {
+        return $this->surname;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Returns the password used to authenticate the user.
+     *
+     * This should be the encoded password. On authentication, a plain-text
+     * password will be salted, encoded, and then compared to this value.
+     *
+     * @return string The password
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
      * Returns the roles granted to the user.
      *
      * <code>
@@ -201,19 +260,6 @@ class User extends Base implements AdvancedUserInterface, JsonSerializable
     }
 
     /**
-     * Returns the password used to authenticate the user.
-     *
-     * This should be the encoded password. On authentication, a plain-text
-     * password will be salted, encoded, and then compared to this value.
-     *
-     * @return string The password
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
      * Returns the salt that was originally used to encode the password.
      *
      * This can return null if the password was not encoded using a salt.
@@ -223,16 +269,6 @@ class User extends Base implements AdvancedUserInterface, JsonSerializable
     public function getSalt()
     {
         return null;
-    }
-
-    /**
-     * Returns the username used to authenticate the user.
-     *
-     * @return string The username
-     */
-    public function getUsername()
-    {
-        return $this->username;
     }
 
     /**
@@ -264,9 +300,9 @@ class User extends Base implements AdvancedUserInterface, JsonSerializable
      * Internally, if this method returns false, the authentication system
      * will throw an AccountExpiredException and prevent login.
      *
-     * @return bool true if the user's account is non expired, false otherwise
-     *
      * @see AccountExpiredException
+     *
+     * @return bool true if the user's account is non expired, false otherwise
      */
     public function isAccountNonExpired()
     {
@@ -280,9 +316,9 @@ class User extends Base implements AdvancedUserInterface, JsonSerializable
      * Internally, if this method returns false, the authentication system
      * will throw a LockedException and prevent login.
      *
-     * @return bool true if the user is not locked, false otherwise
-     *
      * @see LockedException
+     *
+     * @return bool true if the user is not locked, false otherwise
      */
     public function isAccountNonLocked()
     {
@@ -296,9 +332,9 @@ class User extends Base implements AdvancedUserInterface, JsonSerializable
      * Internally, if this method returns false, the authentication system
      * will throw a CredentialsExpiredException and prevent login.
      *
-     * @return bool true if the user's credentials are non expired, false otherwise
-     *
      * @see CredentialsExpiredException
+     *
+     * @return bool true if the user's credentials are non expired, false otherwise
      */
     public function isCredentialsNonExpired()
     {
@@ -312,45 +348,13 @@ class User extends Base implements AdvancedUserInterface, JsonSerializable
      * Internally, if this method returns false, the authentication system
      * will throw a DisabledException and prevent login.
      *
-     * @return bool true if the user is enabled, false otherwise
-     *
      * @see DisabledException
+     *
+     * @return bool true if the user is enabled, false otherwise
      */
     public function isEnabled()
     {
         // TODO: Implement isEnabled() method.
         return true;
-    }
-
-    /**
-     * Getter method for user identifier, this can be username or email.
-     *
-     * @todo    How to determine which one this is?
-     *
-     * @return  string
-     */
-    public function getIdentifier()
-    {
-        return $this->username;
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     *
-     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
-     *
-     * @return  array   data which can be serialized by <b>json_encode</b>, which is a value of any type other than a
-     *                  resource.
-     */
-    public function jsonSerialize()
-    {
-        return array(
-            'id'        => $this->id,
-            'username'  => $this->username,
-            'firstname' => $this->firstname,
-            'surname'   => $this->surname,
-            'email'     => $this->email,
-            'roles'     => $this->getRoles(),
-        );
     }
 }

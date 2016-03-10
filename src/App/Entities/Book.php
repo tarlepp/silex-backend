@@ -6,9 +6,6 @@
  */
 namespace App\Entities;
 
-// Native components
-use JsonSerializable;
-
 // Symfony components
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -43,7 +40,7 @@ use Swagger\Annotations as SWG;
  * @package     App\Entities
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
-class Book extends Base implements JsonSerializable
+class Book extends Base
 {
     /**
      * Book ID
@@ -182,24 +179,5 @@ class Book extends Base implements JsonSerializable
     public function getAuthor()
     {
         return $this->author;
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     *
-     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     *        which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
-    public function jsonSerialize()
-    {
-        return array(
-            'id'            => $this->id,
-            'title'         => $this->title,
-            'description'   => $this->description,
-            'releaseDate'   => $this->releaseDate,
-            'author'        => $this->author,
-        );
     }
 }
