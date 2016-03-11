@@ -8,13 +8,14 @@ namespace App\Controllers;
 
 // Application components
 use App\Services\Rest as RestService;
+use App\Entities\Base as BaseEntity;
 
 // Silex components
 use Silex\Application;
 
 // Symfony components
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Exception\ValidatorException;
 
@@ -53,11 +54,11 @@ abstract class Rest extends Base implements Interfaces\Rest
     /**
      * Returns all specified entities from database as an array of entity objects.
      *
-     * @return  JsonResponse
+     * @return  Response
      */
     public function find()
     {
-        return $this->app->json($this->service->find());
+        return $this->makeResponse($this->service->find());
     }
 
     /**
@@ -65,7 +66,7 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @param   integer $id Entity id
      *
-     * @return  JsonResponse
+     * @return  Response
      */
     public function findOne($id)
     {
@@ -75,7 +76,7 @@ abstract class Rest extends Base implements Interfaces\Rest
             throw new HttpException(404, 'Not found');
         }
 
-        return $this->app->json($entity);
+        return $this->makeResponse($entity);
     }
 
     /**
@@ -83,7 +84,7 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @param   Request $request
      *
-     * @return  JsonResponse
+     * @return  Response
      */
     public function create(Request $request)
     {
@@ -95,7 +96,7 @@ abstract class Rest extends Base implements Interfaces\Rest
             throw new HttpException(400, $error->getMessage());
         }
 
-        return $this->app->json($entity, 201);
+        return $this->makeResponse($entity, 201);
     }
 
     /**
@@ -104,7 +105,7 @@ abstract class Rest extends Base implements Interfaces\Rest
      * @param   Request $request
      * @param   integer $id
      *
-     * @return  JsonResponse
+     * @return  Response
      */
     public function update(Request $request, $id)
     {
@@ -116,7 +117,7 @@ abstract class Rest extends Base implements Interfaces\Rest
             throw new HttpException(400, $error->getMessage());
         }
 
-        return $this->app->json($entity, 200);
+        return $this->makeResponse($entity, 200);
     }
 
     /**
@@ -124,12 +125,33 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @param   integer $id
      *
-     * @return  JsonResponse
+     * @return  Response
      */
     public function delete($id)
     {
         $this->service->delete($id);
 
-        return $this->app->json('', 204);
+        return $this->makeResponse('', 204);
+    }
+
+    /**
+     * Helper method to make JSON response.
+     *
+     * @param   null|string|BaseEntity|BaseEntity[] $data
+     * @param   integer                             $statusCode
+     *
+     * @return  Response
+     */
+    protected function makeResponse($data, $statusCode = 200)
+    {
+        // Create new response
+        $response = new Response();
+        $response->setContent(
+            (empty($data) && !is_array($data)) ? '' : $this->app['serializer']->serialize($data, 'json')
+        );
+        $response->setStatusCode($statusCode);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 }
