@@ -201,9 +201,7 @@ class Application extends SilexApplication
         $this->register(new DoctrineOrmServiceProvider(), $this['vars']->get('orm'));
         $this->register(new CorsServiceProvider(), $this['vars']->get('cors'));
         $this->register(new SwaggerServiceProvider(), $this['vars']->get('swagger'));
-        $this->register(new JmsSerializerServiceProvider(), [
-            "serializer.srcDir" => $this->rootDir . "/vendor/jms/serializer/src",
-        ]);
+        $this->register(new JmsSerializerServiceProvider(), $this['vars']->get('jms.serializer'));
     }
 
     /**

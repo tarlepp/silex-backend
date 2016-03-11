@@ -21,7 +21,7 @@
 # http://silex.sensiolabs.org/doc/providers/monolog.html
 #
 monolog:
-  monolog.logfile: %rootDir%/var/logs/app.log
+  monolog.logfile: %rootDir%var/logs/app.log
 
 #
 # SwaggerServiceProvider parameters
@@ -32,4 +32,18 @@ swagger:
   srcDir: %rootDir%vendor/zircote/swagger-php/src
   servicePath: %rootDir%src
 
+#
+# Pimple Container Dumper - Helper for https://github.com/Sorien/silex-idea-plugin
+#
+# https://github.com/Sorien/silex-pimple-dumper
+#
 pimpledump.output_dir: %rootDir%var
+
+#
+# JMS serializer options
+#
+# https://github.com/jdesrosiers/silex-jms-serializer-provider#parameters
+#
+jms.serializer:
+  serializer.srcDir: %rootDir%vendor/jms/serializer/src
+  serializer.cacheDir: %rootDir%var/serializer
