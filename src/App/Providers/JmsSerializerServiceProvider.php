@@ -26,6 +26,9 @@ use JMS\Serializer\SerializerBuilder;
 /**
  * Class JmsSerializerServiceProvider
  *
+ * Note that this is just a copy from https://github.com/jdesrosiers/silex-jms-serializer-provider reason for this is
+ * composer dependencies that fails :(
+ *
  * @category    Provider
  * @package     App\Providers
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
