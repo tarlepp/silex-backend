@@ -9,6 +9,7 @@ namespace App;
 // Application components
 use App\Components\Swagger\SwaggerServiceProvider;
 use App\Doctrine\DBAL\Types\UTCDateTimeType;
+use App\Providers\JmsSerializerServiceProvider;
 use App\Providers\UserProvider;
 use App\Providers\SecurityServiceProvider;
 use App\Services\Loader;
@@ -200,6 +201,9 @@ class Application extends SilexApplication
         $this->register(new DoctrineOrmServiceProvider(), $this['vars']->get('orm'));
         $this->register(new CorsServiceProvider(), $this['vars']->get('cors'));
         $this->register(new SwaggerServiceProvider(), $this['vars']->get('swagger'));
+        $this->register(new JmsSerializerServiceProvider(), [
+            "serializer.srcDir" => $this->rootDir . "/vendor/jms/serializer/src",
+        ]);
     }
 
     /**
