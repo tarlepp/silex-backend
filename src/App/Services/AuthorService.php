@@ -7,7 +7,7 @@
 namespace App\Services;
 
 // Entity components
-use App\Entities\Author;
+use App\Entities\Author as Entity;
 
 /**
  * Class AuthorService
@@ -16,11 +16,11 @@ use App\Entities\Author;
  * @package     App\Services
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  *
- * @method  Author[]    find()
- * @method  Author      findOne($id)
- * @method  Author      create($data)
- * @method  Author      update($id, $data)
- * @method  Author      delete($id)
+ * @method  Entity[]        find(array $criteria = [], array $orderBy = null, $limit = null, $offset = null)
+ * @method  null|Entity     findOne($id)
+ * @method  Entity          create($data)
+ * @method  Entity          update($id, $data)
+ * @method  Entity          delete($id)
  */
 class AuthorService extends Rest
 {
