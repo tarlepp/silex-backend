@@ -1,12 +1,13 @@
 <?php
 /**
- * /src/App/Services/Base.php
+ * /src/App/Services/Rest.php
  *
  * @author  TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
 namespace App\Services;
 
-use App\Entities\Base as BaseEntity;
+// Application components
+use App\Entities\Base as Entity;
 
 // Doctrine components
 use Doctrine\DBAL\Connection;
@@ -19,11 +20,9 @@ use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Validator\Validator\RecursiveValidator;
 
 /**
- * Class Base
+ * Class Rest
  *
  * @todo How to implement COUNT functionality?
- * @todo How to handle WHERE param?
- * @todo Is there need to paginate 'find' method results?
  *
  * @category    Services
  * @package     App\Services
@@ -105,7 +104,7 @@ class Rest extends Base implements Interfaces\Rest
      * @param   null|integer    $limit
      * @param   null|integer    $offset
      *
-     * @return  BaseEntity[]
+     * @return  Entity[]
      */
     public function find(array $criteria = [], array $orderBy = null, $limit = null, $offset = null)
     {
@@ -118,7 +117,7 @@ class Rest extends Base implements Interfaces\Rest
      *
      * @param   integer $id
      *
-     * @return  null|BaseEntity
+     * @return  null|Entity
      */
     public function findOne($id)
     {
@@ -131,11 +130,11 @@ class Rest extends Base implements Interfaces\Rest
      *
      * @throws  ValidatorException
      *
-     * @param   array|\stdClass $data
+     * @param   \stdClass   $data
      *
-     * @return  BaseEntity
+     * @return  Entity
      */
-    public function create($data)
+    public function create(\stdClass $data)
     {
         // Determine entity name
         $entity = $this->getRepository()->getClassName();
@@ -143,7 +142,7 @@ class Rest extends Base implements Interfaces\Rest
         /**
          * Create new entity
          *
-         * @var BaseEntity $entity
+         * @var Entity $entity
          */
         $entity = new $entity();
 
@@ -159,14 +158,14 @@ class Rest extends Base implements Interfaces\Rest
      * @throws  HttpException
      * @throws  ValidatorException
      *
-     * @param   integer         $id
-     * @param   array|\stdClass $data
+     * @param   integer     $id
+     * @param   \stdClass   $data
      *
-     * @return  BaseEntity
+     * @return  Entity
      */
-    public function update($id, $data)
+    public function update($id, \stdClass $data)
     {
-        /** @var BaseEntity $entity */
+        /** @var Entity $entity */
         $entity = $this->getRepository()->find($id);
 
         // Entity not found
@@ -185,11 +184,11 @@ class Rest extends Base implements Interfaces\Rest
      *
      * @param   integer $id
      *
-     * @return  BaseEntity
+     * @return  Entity
      */
     public function delete($id)
     {
-        /** @var BaseEntity $entity */
+        /** @var Entity $entity */
         $entity = $this->getRepository()->find($id);
 
         // Entity not found
@@ -211,12 +210,12 @@ class Rest extends Base implements Interfaces\Rest
      *
      * @throws  ValidatorException
      *
-     * @param   BaseEntity      $entity
-     * @param   array|\stdClass $data
+     * @param   Entity      $entity
+     * @param   \stdClass   $data
      *
      * @return  void
      */
-    protected function createOrUpdateEntity(BaseEntity $entity, $data)
+    protected function createOrUpdateEntity(Entity $entity, \stdClass $data)
     {
         // Iterate given data
         foreach ($data as $property => $value) {

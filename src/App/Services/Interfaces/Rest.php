@@ -6,7 +6,8 @@
  */
 namespace App\Services\Interfaces;
 
-use App\Entities\Base as BaseEntity;
+// Application components
+use App\Entities\Base as Entity;
 
 // Doctrine components
 use Doctrine\DBAL\Connection;
@@ -21,7 +22,7 @@ use Symfony\Component\Validator\Validator\RecursiveValidator;
 /**
  * Interface for REST based services.
  *
- * @category    Services
+ * @category    Interfaces
  * @package     App\Services\Interfaces
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
@@ -49,9 +50,14 @@ interface Rest
      * Generic find method to return an array of items from database. Return value is an array of specified repository
      * entities.
      *
-     * @return array
+     * @param   array           $criteria
+     * @param   null|array      $orderBy
+     * @param   null|integer    $limit
+     * @param   null|integer    $offset
+     *
+     * @return  Entity[]
      */
-    public function find();
+    public function find(array $criteria = [], array $orderBy = null, $limit = null, $offset = null);
 
     /**
      * Generic findOne method to return single item from database. Return value is single entity from specified
@@ -59,7 +65,7 @@ interface Rest
      *
      * @param   integer $id
      *
-     * @return  null|object
+     * @return  null|Entity
      */
     public function findOne($id);
 
@@ -69,11 +75,11 @@ interface Rest
      *
      * @throws  ValidatorException
      *
-     * @param   array|\stdClass $data
+     * @param   \stdClass   $data
      *
-     * @return  BaseEntity
+     * @return  Entity
      */
-    public function create($data);
+    public function create(\stdClass $data);
 
     /**
      * Generic method to update specified entity with new data.
@@ -81,19 +87,19 @@ interface Rest
      * @throws  HttpException
      * @throws  ValidatorException
      *
-     * @param   integer         $id
-     * @param   array|\stdClass $data
+     * @param   integer     $id
+     * @param   \stdClass   $data
      *
-     * @return  BaseEntity
+     * @return  Entity
      */
-    public function update($id, $data);
+    public function update($id, \stdClass $data);
 
     /**
      * Generic method to delete specified entity from database.
      *
      * @param   integer $id
      *
-     * @return  BaseEntity
+     * @return  Entity
      */
     public function delete($id);
 }
