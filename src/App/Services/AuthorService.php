@@ -18,8 +18,8 @@ use App\Entities\Author as Entity;
  *
  * @method  Entity[]        find(array $criteria = [], array $orderBy = null, $limit = null, $offset = null)
  * @method  null|Entity     findOne($id)
- * @method  Entity          create($data)
- * @method  Entity          update($id, $data)
+ * @method  Entity          create(\stdClass $data)
+ * @method  Entity          update($id, \stdClass $data)
  * @method  Entity          delete($id)
  */
 class AuthorService extends Rest
@@ -30,4 +30,5 @@ class AuthorService extends Rest
      * @var string
      */
     public $repositoryName = 'App\Entities\Author';
+
 }
