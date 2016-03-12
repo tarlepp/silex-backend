@@ -28,7 +28,7 @@ use Symfony\Component\Validator\Validator\RecursiveValidator;
  * @package     App\Services
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
-class Rest extends Base implements Interfaces\Rest
+abstract class Rest extends Base implements Interfaces\Rest
 {
     /**
      * Name of the repository that current REST API will use.
@@ -108,7 +108,20 @@ class Rest extends Base implements Interfaces\Rest
      */
     public function find(array $criteria = [], array $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
+        // Before callback method call
+        if (method_exists($this, 'beforeFind')) {
+            $this->beforeFind($criteria, $orderBy, $limit, $offset);
+        }
+
+        // Fetch data
+        $data = $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
+
+        // After callback method call
+        if (method_exists($this, 'afterFind')) {
+            $data = $this->afterFind($data, $criteria, $orderBy, $limit, $offset);
+        }
+
+        return $data;
     }
 
     /**
@@ -121,7 +134,19 @@ class Rest extends Base implements Interfaces\Rest
      */
     public function findOne($id)
     {
-        return $this->getRepository()->find($id);
+        // Before callback method call
+        if (method_exists($this, 'beforeFindOne')) {
+            $this->beforeFindOne($id);
+        }
+
+        $data = $this->getRepository()->find($id);
+
+        // After callback method call
+        if (method_exists($this, 'afterFindOne')) {
+            $this->afterFindOne($data, $id);
+        }
+
+        return $data;
     }
 
     /**
@@ -146,8 +171,18 @@ class Rest extends Base implements Interfaces\Rest
          */
         $entity = new $entity();
 
+        // Before callback method call
+        if (method_exists($this, 'beforeCreate')) {
+            $this->beforeCreate($entity, $data);
+        }
+
         // Create or update entity
         $this->createOrUpdateEntity($entity, $data);
+
+        // After callback method call
+        if (method_exists($this, 'afterCreate')) {
+            $this->afterCreate($entity, $data);
+        }
 
         return $entity;
     }
@@ -173,8 +208,18 @@ class Rest extends Base implements Interfaces\Rest
             throw new HttpException(404, 'Not found');
         }
 
+        // Before callback method call
+        if (method_exists($this, 'beforeUpdate')) {
+            $this->beforeUpdate($entity, $data);
+        }
+
         // Create or update entity
         $this->createOrUpdateEntity($entity, $data);
+
+        // After callback method call
+        if (method_exists($this, 'afterUpdate')) {
+            $this->afterUpdate($entity, $data);
+        }
 
         return $entity;
     }
@@ -196,11 +241,132 @@ class Rest extends Base implements Interfaces\Rest
             throw new HttpException(404, 'Not found');
         }
 
+        // Before callback method call
+        if (method_exists($this, 'beforeDelete')) {
+            $this->beforeDelete($entity, $id);
+        }
+
+        // And remove entity from repo
         $this->entityManager->remove($entity);
         $this->entityManager->flush($entity);
 
+        // After callback method call
+        if (method_exists($this, 'afterDelete')) {
+            $this->afterDelete($entity, $id);
+        }
+
         return $entity;
     }
+
+    /**
+     * Before lifecycle method for find method.
+     *
+     * @param   array        $criteria
+     * @param   null|array   $orderBy
+     * @param   null|integer $limit
+     * @param   null|integer $offset
+     *
+     * @return  Entity[]
+     */
+    public function beforeFind(array &$criteria = [], array &$orderBy = null, &$limit = null, &$offset = null) { }
+
+    /**
+     * After lifecycle method for find method.
+     *
+     * @param   Entity[]     $data
+     * @param   array        $criteria
+     * @param   null|array   $orderBy
+     * @param   null|integer $limit
+     * @param   null|integer $offset
+     *
+     * @return  Entity[]
+     */
+    public function afterFind(
+        &$data = [],
+        array &$criteria = [],
+        array &$orderBy = null,
+        &$limit = null,
+        &$offset = null
+    ) { }
+
+    /**
+     * Before lifecycle method for findOne method.
+     *
+     * @param   integer $id
+     *
+     * @return  null|Entity
+     */
+    public function beforeFindOne($id) { }
+
+    /**
+     * After lifecycle method for findOne method.
+     *
+     * @param   null|\stdClass|Entity $data
+     * @param   integer               $id
+     *
+     * @return  null|Entity
+     */
+    public function afterFindOne(&$data, $id) { }
+
+    /**
+     * Before lifecycle method for create method.
+     *
+     * @param   Entity    $entity
+     * @param   \stdClass $data
+     *
+     * @return  Entity
+     */
+    public function beforeCreate(Entity $entity, \stdClass $data) { }
+
+    /**
+     * After lifecycle method for create method.
+     *
+     * @param   Entity    $entity
+     * @param   \stdClass $data
+     *
+     * @return  Entity
+     */
+    public function afterCreate(Entity $entity, \stdClass $data) { }
+
+    /**
+     * Before lifecycle method for update method.
+     *
+     * @param   Entity    $entity
+     * @param   \stdClass $data
+     *
+     * @return  Entity
+     */
+    public function beforeUpdate(Entity $entity, \stdClass $data) { }
+
+    /**
+     * After lifecycle method for update method.
+     *
+     * @param   Entity    $entity
+     * @param   \stdClass $data
+     *
+     * @return  Entity
+     */
+    public function afterUpdate(Entity $entity, \stdClass $data) { }
+
+    /**
+     * Before lifecycle method for delete method.
+     *
+     * @param   Entity  $entity
+     * @param   integer $id
+     *
+     * @return  Entity
+     */
+    public function beforeDelete(Entity $entity, $id) { }
+
+    /**
+     * After lifecycle method for delete method.
+     *
+     * @param   Entity  $entity
+     * @param   integer $id
+     *
+     * @return  Entity
+     */
+    public function afterDelete(Entity $entity, $id) { }
 
     /**
      * Helper method to set data to specified entity and store it to database.

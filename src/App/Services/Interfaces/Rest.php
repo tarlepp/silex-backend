@@ -102,4 +102,108 @@ interface Rest
      * @return  Entity
      */
     public function delete($id);
+
+    /**
+     * Before lifecycle method for find method.
+     *
+     * @param   array           $criteria
+     * @param   null|array      $orderBy
+     * @param   null|integer    $limit
+     * @param   null|integer    $offset
+     *
+     * @return  Entity[]
+     */
+    public function beforeFind(array &$criteria = [], array &$orderBy = null, &$limit = null, &$offset = null);
+
+    /**
+     * After lifecycle method for find method.
+     *
+     * @param   Entity[]     $data
+     * @param   array        $criteria
+     * @param   null|array   $orderBy
+     * @param   null|integer $limit
+     * @param   null|integer $offset
+     *
+     * @return  Entity[]
+     */
+    public function afterFind(&$data = [], array &$criteria = [], array &$orderBy = null, &$limit = null, &$offset = null);
+
+    /**
+     * Before lifecycle method for findOne method.
+     *
+     * @param   integer $id
+     *
+     * @return  null|Entity
+     */
+    public function beforeFindOne($id);
+
+    /**
+     * After lifecycle method for findOne method.
+     *
+     * @param   null|\stdClass|Entity   $data
+     * @param   integer                 $id
+     *
+     * @return  null|Entity
+     */
+    public function afterFindOne(&$data, $id);
+
+    /**
+     * Before lifecycle method for create method.
+     *
+     * @param   Entity      $entity
+     * @param   \stdClass   $data
+     *
+     * @return  Entity
+     */
+    public function beforeCreate(Entity $entity, \stdClass $data);
+
+    /**
+     * After lifecycle method for create method.
+     *
+     * @param   Entity      $entity
+     * @param   \stdClass   $data
+     *
+     * @return  Entity
+     */
+    public function afterCreate(Entity $entity, \stdClass $data);
+
+    /**
+     * Before lifecycle method for update method.
+     *
+     * @param   Entity      $entity
+     * @param   \stdClass   $data
+     *
+     * @return  Entity
+     */
+    public function beforeUpdate(Entity $entity, \stdClass $data);
+
+    /**
+     * After lifecycle method for update method.
+     *
+     * @param   Entity      $entity
+     * @param   \stdClass   $data
+     *
+     * @return  Entity
+     */
+    public function afterUpdate(Entity $entity, \stdClass $data);
+
+    /**
+     * Before lifecycle method for delete method.
+     *
+     * @param   Entity  $entity
+     * @param   integer $id
+     *
+     * @return  Entity
+     */
+    public function beforeDelete(Entity $entity, $id);
+
+    /**
+     * After lifecycle method for delete method.
+     *
+     * @param   Entity  $entity
+     * @param   integer $id
+     *
+     * @return  Entity
+     */
+    public function afterDelete(Entity $entity, $id);
 }
