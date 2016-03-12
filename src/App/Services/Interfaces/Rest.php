@@ -110,8 +110,6 @@ interface Rest
      * @param   null|array      $orderBy
      * @param   null|integer    $limit
      * @param   null|integer    $offset
-     *
-     * @return  Entity[]
      */
     public function beforeFind(array &$criteria = [], array &$orderBy = null, &$limit = null, &$offset = null);
 
@@ -123,17 +121,19 @@ interface Rest
      * @param   null|array   $orderBy
      * @param   null|integer $limit
      * @param   null|integer $offset
-     *
-     * @return  Entity[]
      */
-    public function afterFind(&$data = [], array &$criteria = [], array &$orderBy = null, &$limit = null, &$offset = null);
+    public function afterFind(
+        &$data = [],
+        array &$criteria = [],
+        array &$orderBy = null,
+        &$limit = null,
+        &$offset = null
+    );
 
     /**
      * Before lifecycle method for findOne method.
      *
      * @param   integer $id
-     *
-     * @return  null|Entity
      */
     public function beforeFindOne($id);
 
@@ -142,8 +142,6 @@ interface Rest
      *
      * @param   null|\stdClass|Entity   $data
      * @param   integer                 $id
-     *
-     * @return  null|Entity
      */
     public function afterFindOne(&$data, $id);
 
@@ -152,8 +150,6 @@ interface Rest
      *
      * @param   Entity      $entity
      * @param   \stdClass   $data
-     *
-     * @return  Entity
      */
     public function beforeCreate(Entity $entity, \stdClass $data);
 
@@ -162,8 +158,6 @@ interface Rest
      *
      * @param   Entity      $entity
      * @param   \stdClass   $data
-     *
-     * @return  Entity
      */
     public function afterCreate(Entity $entity, \stdClass $data);
 
@@ -172,8 +166,6 @@ interface Rest
      *
      * @param   Entity      $entity
      * @param   \stdClass   $data
-     *
-     * @return  Entity
      */
     public function beforeUpdate(Entity $entity, \stdClass $data);
 
@@ -182,8 +174,6 @@ interface Rest
      *
      * @param   Entity      $entity
      * @param   \stdClass   $data
-     *
-     * @return  Entity
      */
     public function afterUpdate(Entity $entity, \stdClass $data);
 
@@ -192,8 +182,6 @@ interface Rest
      *
      * @param   Entity  $entity
      * @param   integer $id
-     *
-     * @return  Entity
      */
     public function beforeDelete(Entity $entity, $id);
 
@@ -202,8 +190,6 @@ interface Rest
      *
      * @param   Entity  $entity
      * @param   integer $id
-     *
-     * @return  Entity
      */
     public function afterDelete(Entity $entity, $id);
 }

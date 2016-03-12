@@ -265,8 +265,6 @@ abstract class Rest extends Base implements Interfaces\Rest
      * @param   null|array   $orderBy
      * @param   null|integer $limit
      * @param   null|integer $offset
-     *
-     * @return  Entity[]
      */
     public function beforeFind(array &$criteria = [], array &$orderBy = null, &$limit = null, &$offset = null) { }
 
@@ -278,8 +276,6 @@ abstract class Rest extends Base implements Interfaces\Rest
      * @param   null|array   $orderBy
      * @param   null|integer $limit
      * @param   null|integer $offset
-     *
-     * @return  Entity[]
      */
     public function afterFind(
         &$data = [],
@@ -293,8 +289,6 @@ abstract class Rest extends Base implements Interfaces\Rest
      * Before lifecycle method for findOne method.
      *
      * @param   integer $id
-     *
-     * @return  null|Entity
      */
     public function beforeFindOne($id) { }
 
@@ -303,8 +297,6 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @param   null|\stdClass|Entity $data
      * @param   integer               $id
-     *
-     * @return  null|Entity
      */
     public function afterFindOne(&$data, $id) { }
 
@@ -313,8 +305,6 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @param   Entity    $entity
      * @param   \stdClass $data
-     *
-     * @return  Entity
      */
     public function beforeCreate(Entity $entity, \stdClass $data) { }
 
@@ -323,8 +313,6 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @param   Entity    $entity
      * @param   \stdClass $data
-     *
-     * @return  Entity
      */
     public function afterCreate(Entity $entity, \stdClass $data) { }
 
@@ -333,8 +321,6 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @param   Entity    $entity
      * @param   \stdClass $data
-     *
-     * @return  Entity
      */
     public function beforeUpdate(Entity $entity, \stdClass $data) { }
 
@@ -343,8 +329,6 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @param   Entity    $entity
      * @param   \stdClass $data
-     *
-     * @return  Entity
      */
     public function afterUpdate(Entity $entity, \stdClass $data) { }
 
@@ -353,8 +337,6 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @param   Entity  $entity
      * @param   integer $id
-     *
-     * @return  Entity
      */
     public function beforeDelete(Entity $entity, $id) { }
 
@@ -363,8 +345,6 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @param   Entity  $entity
      * @param   integer $id
-     *
-     * @return  Entity
      */
     public function afterDelete(Entity $entity, $id) { }
 
