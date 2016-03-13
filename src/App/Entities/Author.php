@@ -15,6 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 // 3rd party components
 use Swagger\Annotations as SWG;
+use JMS\Serializer\Annotation as JMS;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Class Author
@@ -45,6 +47,10 @@ use Swagger\Annotations as SWG;
  */
 class Author extends Base
 {
+    // Traits
+    use ORMBehaviors\Blameable\Blameable;
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * Author ID
      *

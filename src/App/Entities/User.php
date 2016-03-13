@@ -6,18 +6,17 @@
  */
 namespace App\Entities;
 
-// Native components
-use JsonSerializable;
-
 // Symfony components
 use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 // Doctrine components
 use Doctrine\ORM\Mapping as ORM;
 
 // 3rd party components
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Swagger\Annotations as SWG;
+use JMS\Serializer\Annotation as JMS;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Class User
@@ -60,6 +59,10 @@ use Swagger\Annotations as SWG;
  */
 class User extends Base implements AdvancedUserInterface
 {
+    // Traits
+    use ORMBehaviors\Blameable\Blameable;
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * User ID
      *
@@ -139,6 +142,7 @@ class User extends Base implements AdvancedUserInterface
     /**
      * @var string
      *
+     * @JMS\Exclude
      * @ORM\Column(
      *      name="password",
      *      type="string",
