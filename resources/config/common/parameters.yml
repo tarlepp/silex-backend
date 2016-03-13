@@ -47,3 +47,4 @@ pimpledump.output_dir: %rootDir%var
 jms.serializer:
   serializer.srcDir: %rootDir%vendor/jms/serializer/src
   serializer.cacheDir: %rootDir%var/serializer
+  serializer.namingStrategy: IdenticalProperty
