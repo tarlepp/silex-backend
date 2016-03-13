@@ -155,6 +155,7 @@ class User extends Base implements AdvancedUserInterface
     /**
      * @var string
      *
+     * @JMS\Accessor(getter="getRoles")
      * @ORM\Column(
      *      name="roles",
      *      type="string",
