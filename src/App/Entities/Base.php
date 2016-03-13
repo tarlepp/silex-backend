@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 // 3rd party components
 use Swagger\Annotations as SWG;
+use JMS\Serializer\Annotation as JMS;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
@@ -33,6 +34,7 @@ abstract class Base
      *
      * @var null|\DateTime
      *
+     * @JMS\Accessor(getter="getCreatedAtJson")
      * @SWG\Property()
      * @ORM\Column(
      *      name="createdAt",
@@ -64,6 +66,7 @@ abstract class Base
      *
      * @var null|\DateTime
      *
+     * @JMS\Accessor(getter="getUpdatedAtJson")
      * @SWG\Property()
      * @ORM\Column(
      *      name="updatedAt",
@@ -131,6 +134,26 @@ abstract class Base
     }
 
     /**
+     * Getter method for 'createdAt' attribute for JSON output.
+     *
+     * @return string
+     */
+    public function getCreatedAtJson()
+    {
+        return $this->formatDatetime($this->getCreatedAt());
+    }
+
+    /**
+     * Getter method for 'updatedAt' attribute for JSON output.
+     *
+     * @return string
+     */
+    public function getUpdatedAtJson()
+    {
+        return $this->formatDatetime($this->getUpdatedAt());
+    }
+
+    /**
      * Setter for createdAt
      *
      * @param   \DateTime|null  $createdAt
@@ -184,5 +207,19 @@ abstract class Base
         $this->updatedBy = $updatedBy;
 
         return $this;
+    }
+
+    /**
+     * Helper method to format given \DateTime object to RFC3339 format.
+     *
+     * @see https://www.ietf.org/rfc/rfc3339.txt
+     *
+     * @param   \DateTime|null  $dateTime
+     *
+     * @return  null|string
+     */
+    protected function formatDatetime(\DateTime $dateTime = null)
+    {
+        return is_null($dateTime) ? null : $dateTime->format(\DATE_RFC3339);
     }
 }
