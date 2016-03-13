@@ -53,7 +53,9 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  *          ),
  *      },
  *  )
- * @ORM\Entity
+ * @ORM\Entity(
+ *      repositoryClass="App\Repositories\User"
+ *  )
  *
  * @package App\Entities
  */

@@ -36,7 +36,9 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  * @ORM\Table(
  *      name="author"
  *  )
- * @ORM\Entity
+ * @ORM\Entity(
+ *      repositoryClass="App\Repositories\Book"
+ *  )
  *
  * @category    Entity
  * @package     App\Entities
