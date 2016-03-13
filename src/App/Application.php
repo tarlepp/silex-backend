@@ -26,6 +26,9 @@ use Dflydev\Silex\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
 use JDesrosiers\Silex\Provider\CorsServiceProvider;
 use Sorien\Provider\PimpleDumpProvider;
 use M1\Vars\Provider\Silex\VarsServiceProvider;
+use Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber;
+use Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 // Symfony components
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -291,6 +294,9 @@ class Application extends SilexApplication
      * Method to configure Doctrine (DBAL + ORM). We'll need to do following steps here:
      *  1) Override default datetime and datetimetz types with custom UTC datetime type
      *      - To ensure that we're storing all the datetimes as in UTC time
+     *  2) Register used event behaviours for ORM
+     *      - Timestampable
+     *      - blameable
      *
      * @throws  \Doctrine\DBAL\DBALException
      *
@@ -301,6 +307,34 @@ class Application extends SilexApplication
         // Override DateTime and DateTimeTz types
         Type::overrideType('datetime', UTCDateTimeType::class);
         Type::overrideType('datetimetz', UTCDateTimeType::class);
+
+        $app = $this;
+
+        // Callback to get current user
+        $userCallback = function() use ($app) {
+            return $app['user'];
+        };
+
+        // Register 'Timestampable' behaviour
+        $this['orm.em']->getEventManager()->addEventSubscriber(
+            new TimestampableSubscriber(
+                new ClassAnalyzer(),
+                false,
+                'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable',
+                'datetime'
+            )
+        );
+
+        // Register 'blameable' behaviour
+        $this['orm.em']->getEventManager()->addEventSubscriber(
+            new BlameableSubscriber(
+                new ClassAnalyzer(),
+                false,
+                'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
+                $userCallback,
+                '\App\Entities\User'
+            )
+        );
     }
 
     /**
