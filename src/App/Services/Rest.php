@@ -114,14 +114,14 @@ abstract class Rest extends Base implements Interfaces\Rest
         }
 
         // Fetch data
-        $data = $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
+        $entities = $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
 
         // After callback method call
         if (method_exists($this, 'afterFind')) {
-            $data = $this->afterFind($data, $criteria, $orderBy, $limit, $offset);
+            $this->afterFind($criteria, $orderBy, $limit, $offset, $entities);
         }
 
-        return $data;
+        return $entities;
     }
 
     /**
@@ -139,14 +139,14 @@ abstract class Rest extends Base implements Interfaces\Rest
             $this->beforeFindOne($id);
         }
 
-        $data = $this->getRepository()->find($id);
+        $entity = $this->getRepository()->find($id);
 
         // After callback method call
         if (method_exists($this, 'afterFindOne')) {
-            $this->afterFindOne($data, $id);
+            $this->afterFindOne($id, $entity);
         }
 
-        return $data;
+        return $entity;
     }
 
     /**
@@ -173,7 +173,7 @@ abstract class Rest extends Base implements Interfaces\Rest
 
         // Before callback method call
         if (method_exists($this, 'beforeCreate')) {
-            $this->beforeCreate($entity, $data);
+            $this->beforeCreate($data, $entity);
         }
 
         // Create or update entity
@@ -181,7 +181,7 @@ abstract class Rest extends Base implements Interfaces\Rest
 
         // After callback method call
         if (method_exists($this, 'afterCreate')) {
-            $this->afterCreate($entity, $data);
+            $this->afterCreate($data, $entity);
         }
 
         return $entity;
@@ -210,7 +210,7 @@ abstract class Rest extends Base implements Interfaces\Rest
 
         // Before callback method call
         if (method_exists($this, 'beforeUpdate')) {
-            $this->beforeUpdate($entity, $data);
+            $this->beforeUpdate($id, $data, $entity);
         }
 
         // Create or update entity
@@ -218,7 +218,7 @@ abstract class Rest extends Base implements Interfaces\Rest
 
         // After callback method call
         if (method_exists($this, 'afterUpdate')) {
-            $this->afterUpdate($entity, $data);
+            $this->afterUpdate($id, $data, $entity);
         }
 
         return $entity;
@@ -243,7 +243,7 @@ abstract class Rest extends Base implements Interfaces\Rest
 
         // Before callback method call
         if (method_exists($this, 'beforeDelete')) {
-            $this->beforeDelete($entity, $id);
+            $this->beforeDelete($id, $entity);
         }
 
         // And remove entity from repo
@@ -252,7 +252,7 @@ abstract class Rest extends Base implements Interfaces\Rest
 
         // After callback method call
         if (method_exists($this, 'afterDelete')) {
-            $this->afterDelete($entity, $id);
+            $this->afterDelete($id, $entity);
         }
 
         return $entity;
@@ -261,28 +261,28 @@ abstract class Rest extends Base implements Interfaces\Rest
     /**
      * Before lifecycle method for find method.
      *
-     * @param   array        $criteria
-     * @param   null|array   $orderBy
-     * @param   null|integer $limit
-     * @param   null|integer $offset
+     * @param   array           $criteria
+     * @param   null|array      $orderBy
+     * @param   null|integer    $limit
+     * @param   null|integer    $offset
      */
     public function beforeFind(array &$criteria = [], array &$orderBy = null, &$limit = null, &$offset = null) { }
 
     /**
      * After lifecycle method for find method.
      *
-     * @param   Entity[]     $data
      * @param   array        $criteria
      * @param   null|array   $orderBy
      * @param   null|integer $limit
      * @param   null|integer $offset
+     * @param   Entity[]     $entities
      */
     public function afterFind(
-        &$data = [],
         array &$criteria = [],
         array &$orderBy = null,
         &$limit = null,
-        &$offset = null
+        &$offset = null,
+        array &$entities = []
     ) { }
 
     /**
@@ -290,47 +290,49 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @param   integer $id
      */
-    public function beforeFindOne($id) { }
+    public function beforeFindOne(&$id) { }
 
     /**
      * After lifecycle method for findOne method.
      *
-     * @param   null|\stdClass|Entity $data
-     * @param   integer               $id
+     * @param   integer     $id
+     * @param   null|Entity $entity
      */
-    public function afterFindOne(&$data, $id) { }
+    public function afterFindOne(&$id, Entity $entity = null) { }
 
     /**
      * Before lifecycle method for create method.
      *
-     * @param   Entity    $entity
-     * @param   \stdClass $data
+     * @param   \stdClass   $data
+     * @param   Entity      $entity
      */
-    public function beforeCreate(Entity $entity, \stdClass $data) { }
+    public function beforeCreate(\stdClass $data, Entity $entity) { }
 
     /**
      * After lifecycle method for create method.
      *
-     * @param   Entity    $entity
-     * @param   \stdClass $data
+     * @param   \stdClass   $data
+     * @param   Entity      $entity
      */
-    public function afterCreate(Entity $entity, \stdClass $data) { }
+    public function afterCreate(\stdClass $data, Entity $entity) { }
 
     /**
      * Before lifecycle method for update method.
      *
-     * @param   Entity    $entity
-     * @param   \stdClass $data
+     * @param   integer     $id
+     * @param   \stdClass   $data
+     * @param   Entity      $entity
      */
-    public function beforeUpdate(Entity $entity, \stdClass $data) { }
+    public function beforeUpdate(&$id, \stdClass $data, Entity $entity) { }
 
     /**
      * After lifecycle method for update method.
      *
-     * @param   Entity    $entity
-     * @param   \stdClass $data
+     * @param   integer     $id
+     * @param   \stdClass   $data
+     * @param   Entity      $entity
      */
-    public function afterUpdate(Entity $entity, \stdClass $data) { }
+    public function afterUpdate(&$id, \stdClass $data, Entity $entity) { }
 
     /**
      * Before lifecycle method for delete method.
@@ -338,7 +340,7 @@ abstract class Rest extends Base implements Interfaces\Rest
      * @param   Entity  $entity
      * @param   integer $id
      */
-    public function beforeDelete(Entity $entity, $id) { }
+    public function beforeDelete(&$id, Entity $entity) { }
 
     /**
      * After lifecycle method for delete method.
@@ -346,7 +348,7 @@ abstract class Rest extends Base implements Interfaces\Rest
      * @param   Entity  $entity
      * @param   integer $id
      */
-    public function afterDelete(Entity $entity, $id) { }
+    public function afterDelete(&$id, Entity $entity) { }
 
     /**
      * Helper method to set data to specified entity and store it to database.

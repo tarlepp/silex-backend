@@ -116,18 +116,18 @@ interface Rest
     /**
      * After lifecycle method for find method.
      *
-     * @param   Entity[]     $data
      * @param   array        $criteria
      * @param   null|array   $orderBy
      * @param   null|integer $limit
      * @param   null|integer $offset
+     * @param   Entity[]     $entities
      */
     public function afterFind(
-        &$data = [],
         array &$criteria = [],
         array &$orderBy = null,
         &$limit = null,
-        &$offset = null
+        &$offset = null,
+        array &$entities = []
     );
 
     /**
@@ -135,47 +135,49 @@ interface Rest
      *
      * @param   integer $id
      */
-    public function beforeFindOne($id);
+    public function beforeFindOne(&$id);
 
     /**
      * After lifecycle method for findOne method.
      *
-     * @param   null|\stdClass|Entity   $data
-     * @param   integer                 $id
+     * @param   integer     $id
+     * @param   null|Entity $entity
      */
-    public function afterFindOne(&$data, $id);
+    public function afterFindOne(&$id, Entity $entity = null);
 
     /**
      * Before lifecycle method for create method.
      *
-     * @param   Entity      $entity
      * @param   \stdClass   $data
+     * @param   Entity      $entity
      */
-    public function beforeCreate(Entity $entity, \stdClass $data);
+    public function beforeCreate(\stdClass $data, Entity $entity);
 
     /**
      * After lifecycle method for create method.
      *
-     * @param   Entity      $entity
      * @param   \stdClass   $data
+     * @param   Entity      $entity
      */
-    public function afterCreate(Entity $entity, \stdClass $data);
+    public function afterCreate(\stdClass $data, Entity $entity);
 
     /**
      * Before lifecycle method for update method.
      *
-     * @param   Entity      $entity
+     * @param   integer     $id
      * @param   \stdClass   $data
+     * @param   Entity      $entity
      */
-    public function beforeUpdate(Entity $entity, \stdClass $data);
+    public function beforeUpdate(&$id, \stdClass $data, Entity $entity);
 
     /**
      * After lifecycle method for update method.
      *
-     * @param   Entity      $entity
+     * @param   integer     $id
      * @param   \stdClass   $data
+     * @param   Entity      $entity
      */
-    public function afterUpdate(Entity $entity, \stdClass $data);
+    public function afterUpdate(&$id, \stdClass $data, Entity $entity);
 
     /**
      * Before lifecycle method for delete method.
@@ -183,7 +185,7 @@ interface Rest
      * @param   Entity  $entity
      * @param   integer $id
      */
-    public function beforeDelete(Entity $entity, $id);
+    public function beforeDelete(&$id, Entity $entity);
 
     /**
      * After lifecycle method for delete method.
@@ -191,5 +193,5 @@ interface Rest
      * @param   Entity  $entity
      * @param   integer $id
      */
-    public function afterDelete(Entity $entity, $id);
+    public function afterDelete(&$id, Entity $entity);
 }
