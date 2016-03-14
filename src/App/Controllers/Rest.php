@@ -304,7 +304,7 @@ abstract class Rest extends Base implements Interfaces\Rest
          // Create new response
          $response = new Response();
          $response->setContent(
-             (empty($data) && !is_array($data)) ? '' : $this->app['serializer']->serialize($data, 'json')
+             (empty($data) && is_string($data)) ? '' : $this->app['serializer']->serialize($data, 'json')
          );
          $response->setStatusCode($statusCode);
          $response->headers->set('Content-Type', 'application/json');
