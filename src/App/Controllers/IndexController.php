@@ -54,8 +54,15 @@ class IndexController extends Base
      */
     public function test(Request $request)
     {
-        $params = $request->query->all();
+        $criteria = $request->get('criteria', []);
+        $orderBy = $request->get('orderBy', null);
+        $limit = $request->get('limit', null);
+        $offset = $request->get('offset', null);
 
-        return $this->app->json($params, 200);
+
+        $data = $this->app['author.service']->find($criteria, $orderBy, $limit, $offset);
+
+
+        return $this->app["serializer"]->serialize($data, 'json');
     }
 }

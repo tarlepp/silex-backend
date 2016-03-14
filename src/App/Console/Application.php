@@ -106,10 +106,10 @@ class Application extends SymfonyApplication
         $em = $this->silexApp['orm.em'];
 
         // Create helper set...
-        $helperSet = new HelperSet(array(
+        $helperSet = new HelperSet([
             'db' => new ConnectionHelper($em->getConnection()),
             'em' => new EntityManagerHelper($em),
-        ));
+        ]);
 
         // ... and attach it to console application
         $this->setHelperSet($helperSet);

@@ -242,7 +242,7 @@ class User extends Base implements AdvancedUserInterface
      * <code>
      * public function getRoles()
      * {
-     *     return array('ROLE_USER');
+     *     return ['ROLE_USER'];
      * }
      * </code>
      *

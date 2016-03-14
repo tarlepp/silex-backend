@@ -48,7 +48,7 @@ class SwaggerController
         $json = (string)$swagger;
 
         // Create response
-        $response = Response::create($json, 200, array('Content-Type' => 'application/json'));
+        $response = Response::create($json, 200, ['Content-Type' => 'application/json']);
         $response->setEtag(md5($json));
         $response->isNotModified($request);
 

@@ -247,9 +247,9 @@ class Application extends SilexApplication
                 'anonymous' => true,
             ],
             // CORS preflight requests
-            'cors-preflight' => array(
+            'cors-preflight' => [
                 'pattern' => $this['cors_preflight_request_matcher'],
-            ),
+            ],
             // API docs are also anonymous
             'docs' => [
                 'pattern'   => '^/api',
