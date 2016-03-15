@@ -96,6 +96,24 @@ abstract class Rest extends Base implements Interfaces\Rest
     }
 
     /**
+     * Gets a reference to the entity identified by the given type and identifier without actually loading it,
+     * if the entity is not yet loaded.
+     *
+     * @throws  \Doctrine\ORM\ORMException
+     *
+     * @param   string  $entityName The name of the entity type.
+     * @param   mixed   $id         The entity identifier.
+     *
+     * @return  bool|\Doctrine\Common\Proxy\Proxy|null|object
+     */
+    public function getReference($entityName, $id)
+    {
+        $entityName = '\\App\\Entities\\' . $entityName;
+
+        return $this->entityManager->getReference($entityName, $id);
+    }
+
+    /**
      * Generic find method to return an array of items from database. Return value is an array of specified repository
      * entities.
      *
