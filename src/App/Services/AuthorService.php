@@ -30,5 +30,4 @@ class AuthorService extends Rest
      * @var string
      */
     public $repositoryName = 'App\Entities\Author';
-
 }
