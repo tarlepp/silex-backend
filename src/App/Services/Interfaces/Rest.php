@@ -38,6 +38,13 @@ interface Rest
     public function __construct(Connection $db, EntityManager $entityManager, RecursiveValidator $validator);
 
     /**
+     * Getter method for entity manager.
+     *
+     * @return EntityManager
+     */
+    public function getEntityManager();
+
+    /**
      * Getter method for current repository.
      *
      * @param   bool    $force  Force entity manager fetch
@@ -58,6 +65,13 @@ interface Rest
      * @return  bool|\Doctrine\Common\Proxy\Proxy|null|object
      */
     public function getReference($entityName, $id);
+
+    /**
+     * Getter method for all associations that current entity contains.
+     *
+     * @return array
+     */
+    public function getAssociations();
 
     /**
      * Generic find method to return an array of items from database. Return value is an array of specified repository

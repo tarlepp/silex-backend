@@ -80,6 +80,16 @@ abstract class Rest extends Base implements Interfaces\Rest
     }
 
     /**
+     * Getter method for entity manager.
+     *
+     * @return EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
      * Getter method for current repository.
      *
      * @param   bool    $force  Force entity manager fetch
@@ -111,6 +121,16 @@ abstract class Rest extends Base implements Interfaces\Rest
         $entityName = '\\App\\Entities\\' . $entityName;
 
         return $this->entityManager->getReference($entityName, $id);
+    }
+
+    /**
+     * Getter method for all associations that current entity contains.
+     *
+     * @return array
+     */
+    public function getAssociations()
+    {
+        return array_keys($this->entityManager->getClassMetadata($this->repositoryName)->getAssociationMappings());
     }
 
     /**
