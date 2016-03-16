@@ -59,12 +59,11 @@ interface Rest
      *
      * @throws  \Doctrine\ORM\ORMException
      *
-     * @param   string  $entityName The name of the entity type.
-     * @param   mixed   $id         The entity identifier.
+     * @param   mixed   $id The entity identifier.
      *
      * @return  bool|\Doctrine\Common\Proxy\Proxy|null|object
      */
-    public function getReference($entityName, $id);
+    public function getReference($id);
 
     /**
      * Getter method for all associations that current entity contains.

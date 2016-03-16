@@ -82,7 +82,7 @@ abstract class Rest extends Base implements Interfaces\Rest
     /**
      * Getter method for entity manager.
      *
-     * @return EntityManager
+     * @return  EntityManager
      */
     public function getEntityManager()
     {
@@ -111,16 +111,13 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @throws  \Doctrine\ORM\ORMException
      *
-     * @param   string  $entityName The name of the entity type.
-     * @param   mixed   $id         The entity identifier.
+     * @param   mixed   $id The entity identifier.
      *
      * @return  bool|\Doctrine\Common\Proxy\Proxy|null|object
      */
-    public function getReference($entityName, $id)
+    public function getReference($id)
     {
-        $entityName = '\\App\\Entities\\' . $entityName;
-
-        return $this->entityManager->getReference($entityName, $id);
+        return $this->entityManager->getReference($this->repositoryName, $id);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * /src/App/Services/Base.php
+ * /src/App/Services/AuthorService.php
  *
  * @author  TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
@@ -16,6 +16,7 @@ use App\Entities\Author as Entity;
  * @package     App\Services
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  *
+ * @method  Entity          getReference($id)
  * @method  Entity[]        find(array $criteria = [], array $orderBy = null, $limit = null, $offset = null)
  * @method  null|Entity     findOne($id)
  * @method  Entity          create(\stdClass $data)

@@ -1,6 +1,6 @@
 <?php
 /**
- * /src/App/Services/Base.php
+ * /src/App/Services/BookService.php
  *
  * @author  TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
@@ -10,13 +10,13 @@ namespace App\Services;
 use App\Entities\Book as Entity;
 
 /**
- * Class AuthorService
+ * Class BookService
  *
  * @category    Services
  * @package     App\Services
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  *
- * @method  Entity          getReference($entityName, $id)
+ * @method  Entity          getReference($id)
  * @method  Entity[]        find(array $criteria = [], array $orderBy = null, $limit = null, $offset = null)
  * @method  null|Entity     findOne($id)
  * @method  Entity          create(\stdClass $data)
