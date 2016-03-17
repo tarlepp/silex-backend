@@ -24,6 +24,16 @@ class Loader
     protected $app;
 
     /**
+     * Services to expose across the application.
+     *
+     * @var array
+     */
+    protected $services = [
+        'author.service'    => 'Author',
+        'book.service'      => 'Book',
+    ];
+
+    /**
      * Loader constructor.
      *
      * @param   Application $app
@@ -40,8 +50,14 @@ class Loader
      */
     public function bindServices()
     {
-        $this->app['author.service'] = $this->app->share(function() {
-            return new AuthorService($this->app['db'], $this->app['orm.em'], $this->app['validator']);
-        });
+        foreach ($this->services as $service => $class) {
+            $share = function() use ($class) {
+                $className = '\\App\\Services\\' . $class;
+
+                return new $className($this->app['db'], $this->app['orm.em'], $this->app['validator']);
+            };
+
+            $this->app[$service] = $this->app->share($share);
+        }
     }
 }

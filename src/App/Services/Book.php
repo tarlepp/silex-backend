@@ -1,16 +1,16 @@
 <?php
 /**
- * /src/App/Services/AuthorService.php
+ * /src/App/Services/Book.php
  *
  * @author  TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
 namespace App\Services;
 
 // Entity components
-use App\Entities\Author as Entity;
+use App\Entities\Book as Entity;
 
 /**
- * Class AuthorService
+ * Class Book
  *
  * @category    Services
  * @package     App\Services
@@ -23,12 +23,12 @@ use App\Entities\Author as Entity;
  * @method  Entity          update($id, \stdClass $data)
  * @method  Entity          delete($id)
  */
-class AuthorService extends Rest
+class Book extends Rest
 {
     /**
      * Name of the repository that current REST API will use.
      *
      * @var string
      */
-    public $repositoryName = 'App\Entities\Author';
+    public $repositoryName = 'App\Entities\Book';
 }
