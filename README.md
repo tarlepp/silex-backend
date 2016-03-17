@@ -7,6 +7,18 @@ Simple JSON API which is build on top of [Silex](http://silex.sensiolabs.org/) f
 * Only JSON responses from API
 * JWT authentication
 
+### TODO
+- [x] Configuration for each environment and/or developer
+- [x] Authentication via JWT
+- [x] "Automatic" API doc generation
+- [x] Database connection (Doctrine dbal + orm)
+- [x] Console tools (dbal, migrations, orm)
+- [x] Docker support
+- [ ] 
+- [ ] 
+- [ ] 
+
+
 ## Requirements
 * PHP 5.5.x
 * Apache / nginx / IIS / Lighttpd see configuration information [here](http://silex.sensiolabs.org/doc/web_servers.html) 
@@ -23,6 +35,7 @@ $ php composer.phar install
 ## Installation
 * Open terminal and clone this repository to your server
 * Create web-server configuration which points to ```web``` folder
+* Ensure that ```var``` folder is writable by web-server user
 
 ## Configuration
 TODO
