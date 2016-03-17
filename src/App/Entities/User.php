@@ -71,6 +71,8 @@ class User extends Base implements AdvancedUserInterface
      * @var integer
      *
      * @SWG\Property()
+     * @JMS\Groups({"default"})
+     *
      * @ORM\Column(
      *      name="id",
      *      type="integer",
@@ -87,6 +89,8 @@ class User extends Base implements AdvancedUserInterface
      * @var string
      *
      * @SWG\Property()
+     * @JMS\Groups({"default"})
+     *
      * @ORM\Column(
      *      name="username",
      *      type="string",
@@ -102,6 +106,8 @@ class User extends Base implements AdvancedUserInterface
      * @var string
      *
      * @SWG\Property()
+     * @JMS\Groups({"default"})
+     *
      * @ORM\Column(
      *      name="firstname",
      *      type="string",
@@ -117,6 +123,8 @@ class User extends Base implements AdvancedUserInterface
      * @var string
      *
      * @SWG\Property()
+     * @JMS\Groups({"default"})
+     *
      * @ORM\Column(
      *      name="surname",
      *      type="string",
@@ -132,6 +140,8 @@ class User extends Base implements AdvancedUserInterface
      * @var string
      *
      * @SWG\Property()
+     * @JMS\Groups({"default"})
+     *
      * @ORM\Column(
      *      name="email",
      *      type="string",
@@ -158,6 +168,8 @@ class User extends Base implements AdvancedUserInterface
      * @var string
      *
      * @JMS\Accessor(getter="getRoles")
+     * @JMS\Groups({"roles"})
+     *
      * @ORM\Column(
      *      name="roles",
      *      type="string",

@@ -34,7 +34,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  * )
  *
  * @ORM\Table(
- *      name="author"
+ *      name="book"
  *  )
  * @ORM\Entity(
  *      repositoryClass="App\Repositories\Book"
@@ -56,6 +56,8 @@ class Book extends Base
      * @var integer
      *
      * @SWG\Property()
+     * @JMS\Groups({"default"})
+     *
      * @ORM\Column(
      *      name="id",
      *      type="integer",
@@ -72,6 +74,8 @@ class Book extends Base
      * @var string
      *
      * @SWG\Property()
+     * @JMS\Groups({"default"})
+     *
      * @ORM\Column(
      *      name="title",
      *      type="string",
@@ -87,6 +91,8 @@ class Book extends Base
      * @var string
      *
      * @SWG\Property()
+     * @JMS\Groups({"default"})
+     *
      * @ORM\Column(
      *      name="description",
      *      type="text",
@@ -101,6 +107,8 @@ class Book extends Base
      * @var \DateTime
      *
      * @SWG\Property()
+     * @JMS\Groups({"default"})
+     *
      * @ORM\Column(
      *      name="releaseDate",
      *      type="date",
@@ -113,7 +121,12 @@ class Book extends Base
      * @var \App\Entities\Author
      *
      * @SWG\Property()
-     * @ORM\ManyToOne(targetEntity="App\Entities\Author")
+     * @JMS\Groups({"author"})
+     *
+     * @ORM\ManyToOne(
+     *      targetEntity="App\Entities\Author",
+     *      inversedBy="books"
+     *  )
      * @ORM\JoinColumns({
      *      @ORM\JoinColumn(
      *          name="author",
@@ -142,7 +155,7 @@ class Book extends Base
     /**
      * Getter method for 'id' attribute.
      *
-     * @return integer
+     * @return  integer
      */
     public function getId()
     {
@@ -152,7 +165,7 @@ class Book extends Base
     /**
      * Getter method for 'title' attribute.
      *
-     * @return string
+     * @return  string
      */
     public function getTitle()
     {
@@ -162,7 +175,7 @@ class Book extends Base
     /**
      * Getter method for 'description' attribute.
      *
-     * @return string
+     * @return  string
      */
     public function getDescription()
     {
@@ -172,7 +185,7 @@ class Book extends Base
     /**
      * Getter method for 'releaseDate' attribute.
      *
-     * @return \DateTime
+     * @return  \DateTime
      */
     public function getReleaseDate()
     {
@@ -182,10 +195,66 @@ class Book extends Base
     /**
      * Getter method for 'author' attribute.
      *
-     * @return Author
+     * @return  Author
      */
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * Setter for title
+     *
+     * @param   string  $title
+     *
+     * @return  Book
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Setter for description
+     *
+     * @param   string  $description
+     *
+     * @return  Book
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Setter for release date
+     *
+     * @param   \DateTime   $releaseDate
+     *
+     * @return  Book
+     */
+    public function setReleaseDate($releaseDate)
+    {
+        $this->releaseDate = $releaseDate;
+
+        return $this;
+    }
+
+    /**
+     * Setter for author.
+     *
+     * @param   Author $author
+     *
+     * @return  Book
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+
+        return $this;
     }
 }

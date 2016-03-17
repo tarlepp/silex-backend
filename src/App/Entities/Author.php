@@ -59,6 +59,8 @@ class Author extends Base
      * @var integer
      *
      * @SWG\Property()
+     * @JMS\Groups({"default"})
+     *
      * @ORM\Column(
      *      name="id",
      *      type="integer",
@@ -75,6 +77,8 @@ class Author extends Base
      * @var string
      *
      * @SWG\Property()
+     * @JMS\Groups({"default"})
+     *
      * @ORM\Column(
      *      name="name",
      *      type="string",
@@ -90,6 +94,8 @@ class Author extends Base
      * @var string
      *
      * @SWG\Property()
+     * @JMS\Groups({"default"})
+     *
      * @ORM\Column(
      *      name="description",
      *      type="text",
@@ -97,6 +103,21 @@ class Author extends Base
      *  )
      */
     private $description;
+
+    /**
+     * Author books
+     *
+     * @var \App\Entities\Book[]
+     *
+     * @SWG\Property()
+     * @JMS\Groups({"books"})
+     *
+     * @ORM\OneToMany(
+     *      targetEntity="App\Entities\Book",
+     *      mappedBy="author"
+     *  )
+     */
+    private $books;
 
     /**
      * Validator definitions for 'Author' entity
@@ -139,6 +160,16 @@ class Author extends Base
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Getter for author books.
+     *
+     * @return  Book[]
+     */
+    public function getBooks()
+    {
+        return $this->books;
     }
 
     /**
