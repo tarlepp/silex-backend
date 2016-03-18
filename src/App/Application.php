@@ -9,6 +9,7 @@ namespace App;
 // Application components
 use App\Components\Swagger\SwaggerServiceProvider;
 use App\Doctrine\DBAL\Types\UTCDateTimeType;
+use App\Providers\ControllerProvider;
 use App\Providers\JmsSerializerServiceProvider;
 use App\Providers\UserProvider;
 use App\Providers\SecurityServiceProvider;

@@ -1,11 +1,15 @@
 <?php
 /**
- * /src/App/ControllerProvider.php
+ * /src/App/Providers/ControllerProvider.php
  *
  * @author  TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
-namespace App;
+namespace App\Providers;
 
+// Application components
+use App\Controllers;
+
+// Silex components
 use Silex\Application as App;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
@@ -13,8 +17,8 @@ use Silex\ControllerProviderInterface;
 /**
  * Class ControllerProvider
  *
- * @category    Core
- * @package     App
+ * @category    Provider
+ * @package     App\Providers
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
 class ControllerProvider implements ControllerProviderInterface
