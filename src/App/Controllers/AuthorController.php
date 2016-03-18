@@ -20,6 +20,15 @@ use Swagger\Annotations as SWG;
 /**
  * Class AuthorController
  *
+ * This handles following route handling on application:
+ *  GET     /author/
+ *  GET     /author/{id}
+ *  POST    /author/
+ *  PUT     /author/{id}
+ *  DELETE  /author/{id}
+ *
+ * @mountPoint  /author
+ *
  * @category    Controller
  * @package     App\Controllers
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
@@ -29,7 +38,7 @@ class AuthorController extends Rest
     /**
      * Service that controller is using.
      *
-     * @var AuthorService
+     * @var \App\Services\Author
      */
     protected $service;
 

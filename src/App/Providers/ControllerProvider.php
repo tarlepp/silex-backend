@@ -7,12 +7,16 @@
 namespace App\Providers;
 
 // Application components
+use App\Application;
 use App\Controllers;
 
 // Silex components
 use Silex\Application as App;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
+
+// 3rd party components
+use phpDocumentor\Reflection\DocBlockFactory;
 
 /**
  * Class ControllerProvider
@@ -26,7 +30,7 @@ class ControllerProvider implements ControllerProviderInterface
     /**
      * Current Silex application
      *
-     * @var App
+     * @var Application
      */
     private $app;
 
@@ -95,14 +99,67 @@ class ControllerProvider implements ControllerProviderInterface
     /**
      * Attach application mount points to specified controllers.
      *
-     * @todo    can this be done automatic?
-     *
      * @return  void
      */
     private function mount()
     {
-        $this->app->mount('/', new Controllers\IndexController());
-        $this->app->mount('/auth', new Controllers\AuthController());
-        $this->app->mount('/author', new Controllers\AuthorController());
+        foreach ($this->getMountPoints() as $mount) {
+            $this->app->mount($mount->mountPoint, new $mount->controller);
+        }
+    }
+
+    /**
+     * Getter for mount points and actual controller classes for those.
+     *
+     * @todo Build a cache for this!
+     *
+     * @return  array
+     */
+    private function getMountPoints()
+    {
+        // Create doc block factory
+        $factory = DocBlockFactory::createInstance();
+
+        /**
+         * Lambda function to iterate all controller classes to return mount points to each of them.
+         *
+         * @param   string  $file
+         *
+         * @return  null|\stdClass
+         */
+        $iterator = function($file) use ($factory) {
+            // Specify controller class name with namespace
+            $className = '\\App\\Controllers\\' . str_replace('.php', '', basename($file));
+
+            // Get reflection about controller class
+            $reflectionClass = new \ReflectionClass($className);
+
+            // We're not interested about abstract classes
+            if ($reflectionClass->isAbstract()) {
+               return null;
+            }
+
+            // Get 'mountPoint' tags from class comment block
+            $tags = $factory->create($reflectionClass->getDocComment())->getTagsByName('mountPoint');
+
+            // Nice, we have one 'mountPoint' tag in comments, so we'll use that
+            if (count($tags) === 1) {
+                $tag = $tags[0];
+
+                // Normalize mount point name
+                $mountPoint = trim(str_replace('@' . $tag->getName(), '', $tag->render()));
+
+                // Create output
+                $output = new \stdClass();
+                $output->mountPoint = $mountPoint;
+                $output->controller = $className;
+
+                return $output;
+            }
+
+            return null;
+        };
+
+        return array_filter(array_map($iterator, glob($this->app->getRootDir() . 'src/App/Controllers/*.php')));
     }
 }

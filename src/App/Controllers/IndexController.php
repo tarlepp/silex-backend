@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * This handles following route handling on application:
  *  GET /
+ *  GET /test
+ *
+ * @mountPoint  /
  *
  * @category    Controller
  * @package     App\Controllers

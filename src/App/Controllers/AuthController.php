@@ -2,6 +2,8 @@
 /**
  * /src/App/Controllers/AuthController.php
  *
+ * safs
+ *
  * @author  TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
 namespace App\Controllers;
@@ -23,6 +25,8 @@ use Swagger\Annotations as SWG;
  * This handles following route handling on application:
  *  POST    /auth/login
  *  GET     /auth/profile
+ *
+ * @mountPoint  /auth
  *
  * @category    Controller
  * @package     App\Controllers
