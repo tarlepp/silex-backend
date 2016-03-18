@@ -1,10 +1,9 @@
 #
 # /resources/config/prod/parameters.yml
 #
-# This file contains production (prod) environment parameter settings for Silex application.
+# This file contains parameter settings for production environment application.
 #
-# Note that this file is ment for production (prod) environment database settings. Also note that these configuration
-# values are common to all devs. If you want to override these settings in your _own_ environment you can create
-# 'local.yml' file and override what ever you want in this environment.
+# Note that these settings are common to all devs. If you want to override these settings in your _own_ environment
+# you can create 'local.yml' file and override what ever you want in this environment.
 #
 debug: false

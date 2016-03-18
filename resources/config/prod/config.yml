@@ -1,9 +1,13 @@
 #
 # /resources/config/prod/config.yml
 #
-# This file will import all the production (prod) environment settings for application, see each of files that are
-# listed below for detailed information. Also note that this will import 'common' settings for the base of all
-# application configurations.
+# Main configuration file for production environment application. This configuration will import following
+# configurations and merge all values from each.
+#   1) prod
+#   2) common
+#
+# Also note that each configuration 'level' could have user specified 'local.yml' config that will override all
+# specified settings on that level.
 #
 imports:
   - { resource: ../common/config.yml }

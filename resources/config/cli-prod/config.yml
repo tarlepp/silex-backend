@@ -1,16 +1,17 @@
 #
-# /resources/config/dev/config.yml
+# /resources/config/cli-prod/config.yml
 #
-# Main configuration file for development environment application. This configuration will import following
+# Main configuration file for production environment console application. This configuration will import following
 # configurations and merge all values from each.
-#   1) dev
-#   2) common
+#   1) prod-dev
+#   2) prod
+#   3) common
 #
 # Also note that each configuration 'level' could have user specified 'local.yml' config that will override all
 # specified settings on that level.
 #
 imports:
-  - { resource: ../common/config.yml }
+  - { resource: ../prod/config.yml }
   - { resource: database.yml }
   - { resource: parameters.yml }
   - { resource: security.yml }

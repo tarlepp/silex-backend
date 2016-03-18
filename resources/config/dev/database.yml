@@ -1,9 +1,8 @@
 #
 # /resources/config/dev/database.yml
 #
-# This file contains development (dev) environment database related settings for Silex application.
+# This file contains database related settings for development environment application.
 #
-# Note that this file is ment for development (dev) environment database settings. Also note that these configuration
-# values are common to all devs. If you want to override these settings in your _own_ environment you can create
-# 'local.yml' file and override what ever you want in this environment.
+# Note that these settings are common to all devs. If you want to override these settings in your _own_ environment
+# you can create 'local.yml' file and override what ever you want in this environment.
 #

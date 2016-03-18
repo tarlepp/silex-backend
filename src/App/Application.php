@@ -134,9 +134,12 @@ class Application extends SilexApplication
     {
         $this->checkEnvironmentVariables();
 
+        // Add 'cli-' prefix if running console application
+        $prefix = php_sapi_name() === 'cli' ? 'cli-' : '';
+
         // Register configuration provider
         $this->register(
-            new VarsServiceProvider($this->rootDir . 'resources/config/' . $this->env . '/config.yml'),
+            new VarsServiceProvider($this->rootDir . 'resources/config/' . $prefix . $this->env . '/config.yml'),
             [
                 'vars.options' => [
                     'cache'         => true,

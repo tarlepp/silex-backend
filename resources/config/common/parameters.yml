@@ -1,7 +1,7 @@
 #
 # /resources/config/common/parameters.yml
 #
-# This file contains common parameters for Silex application.
+# This file contains common parameters Silex application.
 #
 # Note that these settings are used IF any environment OR local specified settings are not configured. If you want to
 # override any of these values use environment specified file which is located in dev, prod or test directory. Note
@@ -10,9 +10,10 @@
 # If you just want to override these settings in your _own_ environment you can create 'local.yml' file and override
 # what ever you want to. Also note that this 'local.yml' can be created to any of following directories under config:
 #   - common
-#   - test
 #   - dev
+#   - cli-dev
 #   - prod
+#   - cli-prod
 #
 
 #

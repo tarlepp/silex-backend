@@ -7,6 +7,7 @@
 namespace App\Controllers;
 
 // Symfony components
+use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -58,11 +59,17 @@ class IndexController extends Base
         $orderBy = $request->get('orderBy', null);
         $limit = $request->get('limit', null);
         $offset = $request->get('offset', null);
+        $populate = $request->get('populate', []);
 
+        $assocs = $this->app['author.service']->getAssociations();
 
         $data = $this->app['author.service']->find($criteria, $orderBy, $limit, $offset);
 
+        $context = SerializationContext::create()->setGroups(array_merge(['default'], array_intersect($assocs, $populate)));
 
-        return $this->app["serializer"]->serialize($data, 'json');
+        $context->setSerializeNull(true);
+
+        return $this->app["serializer"]->serialize($data, 'json', $context);
+        //return $this->app["serializer"]->serialize($data, 'json');
     }
 }

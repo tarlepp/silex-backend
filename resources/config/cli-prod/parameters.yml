@@ -1,7 +1,7 @@
 #
-# /resources/config/prod/security.yml
+# /resources/config/cli-prod/parameters.yml
 #
-# This file contains security settings for production environment application.
+# This file contains parameter settings for production environment console application.
 #
 # Note that these settings are common to all devs. If you want to override these settings in your _own_ environment
 # you can create 'local.yml' file and override what ever you want in this environment.

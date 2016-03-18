@@ -1,8 +1,7 @@
 #
 # /resources/config/common/config.yml
 #
-# This file will import all the _base_ settings for application, see each of files that are listed below for detailed
-# information.
+# Main configuration file for whole application. See each of files that are listed below for detailed information.
 #
 imports:
   - { resource: database.yml }
