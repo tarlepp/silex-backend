@@ -1,6 +1,6 @@
 <?php
 /**
- * /src/App/Controllers/AuthorController.php
+ * /src/App/Controllers/Author.php
  *
  * @author  TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Exception\ValidatorException;
 use Swagger\Annotations as SWG;
 
 /**
- * Class AuthorController
+ * Class Author
  *
  * This handles following route handling on application:
  *  GET     /author/
@@ -33,7 +33,7 @@ use Swagger\Annotations as SWG;
  * @package     App\Controllers
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
-class AuthorController extends Rest
+class Author extends Rest
 {
     /**
      * Service that controller is using.

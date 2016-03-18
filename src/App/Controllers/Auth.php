@@ -1,6 +1,6 @@
 <?php
 /**
- * /src/App/Controllers/AuthController.php
+ * /src/App/Controllers/Auth.php
  *
  * safs
  *
@@ -20,7 +20,7 @@ use JsonMapper;
 use Swagger\Annotations as SWG;
 
 /**
- * Class AuthController
+ * Class Auth
  *
  * This handles following route handling on application:
  *  POST    /auth/login
@@ -32,7 +32,7 @@ use Swagger\Annotations as SWG;
  * @package     App\Controllers
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
-class AuthController extends Base
+class Auth extends Base
 {
     /**
      * Method to register all routes for current controller. Note that all routes contains "auth" prefix.

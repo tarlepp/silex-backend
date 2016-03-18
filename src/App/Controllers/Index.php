@@ -1,6 +1,6 @@
 <?php
 /**
- * /src/App/Controllers/IndexController.php
+ * /src/App/Controllers/Index.php
  *
  * @author  TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
@@ -11,7 +11,7 @@ use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class IndexController
+ * Class Index
  *
  * This handles following route handling on application:
  *  GET /
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @package     App\Controllers
  * @author      TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
-class IndexController extends Base
+class Index extends Base
 {
     /**
      * Method to register all routes for current controller.
