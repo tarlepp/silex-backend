@@ -1,6 +1,6 @@
 <?php
 /**
- * /src/App/Controllers/RestController.php
+ * /src/App/Controllers/Rest.php
  *
  * @author  TLe, Tarmo Leppänen <tarmo.leppanen@protacon.com>
  */
@@ -18,6 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Exception\ValidatorException;
+
+// 3rd party components
+use JMS\Serializer\SerializationContext;
 
 /**
  * Abstract class that all basic REST controllers uses.
@@ -60,10 +63,13 @@ abstract class Rest extends Base implements Interfaces\Rest
      */
     public function find(Request $request)
     {
-        $criteria = $request->get('criteria', []);
-        $orderBy = $request->get('orderBy', null);
+        // Reserved parameters
+        $criteria = (array)$request->get('criteria', []);
+        $orderBy = (array)$request->get('orderBy', null);
         $limit = $request->get('limit', null);
         $offset = $request->get('offset', null);
+        $populate = (array)$request->get('populate', []);
+        $populateAll = array_key_exists('populateAll', $request->query->all());
 
         if (method_exists($this, 'beforeFind')) {
             $this->beforeFind($request, $criteria, $orderBy, $limit, $offset);
@@ -75,7 +81,7 @@ abstract class Rest extends Base implements Interfaces\Rest
             $this->afterFind($request, $criteria, $orderBy, $limit, $offset, $entities);
         }
 
-        return $this->makeResponse($entities);
+        return $this->makeResponse($entities, 200, $this->getSerializeContext($populate, $populateAll));
     }
 
     /**
@@ -296,19 +302,37 @@ abstract class Rest extends Base implements Interfaces\Rest
       *
       * @param   null|string|Entity|Entity[]    $data
       * @param   integer                        $statusCode
+      * @param   null|SerializationContext      $context
       *
       * @return  Response
       */
-     protected function makeResponse($data, $statusCode = 200)
+     protected function makeResponse($data, $statusCode = 200, SerializationContext $context = null)
      {
          // Create new response
          $response = new Response();
          $response->setContent(
-             (empty($data) && is_string($data)) ? '' : $this->app['serializer']->serialize($data, 'json')
+             (empty($data) && is_string($data)) ? '' : $this->app['serializer']->serialize($data, 'json', $context)
          );
          $response->setStatusCode($statusCode);
          $response->headers->set('Content-Type', 'application/json');
 
          return $response;
      }
- }
+
+    /**
+     * Helper method to get serialization context for query.
+     *
+     * @param   array   $populate
+     * @param   boolean $populateAll
+     *
+     * @return  SerializationContext
+     */
+    protected function getSerializeContext(array $populate, $populateAll)
+    {
+        // Determine used default group
+        $defaultGroup = $populateAll ? 'default' : end(explode('\\', $this->service->getRepository()->getClassName()));
+
+        // Create context and set used groups
+        return SerializationContext::create()->setGroups(array_merge([$defaultGroup], $populate));
+    }
+}
