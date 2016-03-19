@@ -330,7 +330,11 @@ abstract class Rest extends Base implements Interfaces\Rest
     protected function getSerializeContext(array $populate, $populateAll)
     {
         // Determine used default group
-        $defaultGroup = $populateAll ? 'default' : end(explode('\\', $this->service->getRepository()->getClassName()));
+        $defaultGroup = $populateAll ? 'Default' : end(explode('\\', $this->service->getRepository()->getClassName()));
+
+        if (count($populate) === 0 && $populateAll) {
+            $populate = array_map('ucfirst', $this->service->getAssociations());
+        }
 
         // Create context and set used groups
         return SerializationContext::create()->setGroups(array_merge([$defaultGroup], $populate));
