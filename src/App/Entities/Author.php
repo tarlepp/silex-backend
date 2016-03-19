@@ -59,7 +59,7 @@ class Author extends Base
      * @var integer
      *
      * @SWG\Property()
-     * @JMS\Groups({"default"})
+     * @JMS\Groups({"Default", "Author", "AuthorId"})
      *
      * @ORM\Column(
      *      name="id",
@@ -77,7 +77,7 @@ class Author extends Base
      * @var string
      *
      * @SWG\Property()
-     * @JMS\Groups({"default"})
+     * @JMS\Groups({"Default", "Author"})
      *
      * @ORM\Column(
      *      name="name",
@@ -94,7 +94,7 @@ class Author extends Base
      * @var string
      *
      * @SWG\Property()
-     * @JMS\Groups({"default"})
+     * @JMS\Groups({"Default", "Author"})
      *
      * @ORM\Column(
      *      name="description",
@@ -110,7 +110,7 @@ class Author extends Base
      * @var \App\Entities\Book[]
      *
      * @SWG\Property()
-     * @JMS\Groups({"books"})
+     * @JMS\Groups({"Books"})
      *
      * @ORM\OneToMany(
      *      targetEntity="App\Entities\Book",

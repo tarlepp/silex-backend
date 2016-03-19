@@ -35,7 +35,7 @@ abstract class Base
      * @var null|\DateTime
      *
      * @JMS\Accessor(getter="getCreatedAtJson")
-     * @JMS\Groups({"default"})
+     * @JMS\Groups({"Default", "CreatedAt"})
      *
      * @SWG\Property()
      * @ORM\Column(
@@ -52,7 +52,7 @@ abstract class Base
      * @var null|\App\Entities\User
      *
      * @SWG\Property()
-     * @JMS\Groups({"createdBy"})
+     * @JMS\Groups({"CreatedBy"})
      *
      * @ORM\ManyToOne(targetEntity="App\Entities\User")
      * @ORM\JoinColumns({
@@ -71,7 +71,7 @@ abstract class Base
      * @var null|\DateTime
      *
      * @JMS\Accessor(getter="getUpdatedAtJson")
-     * @JMS\Groups({"default"})
+     * @JMS\Groups({"Default", "UpdatedAt"})
      *
      * @SWG\Property()
      * @ORM\Column(
@@ -88,7 +88,7 @@ abstract class Base
      * @var null|\App\Entities\User
      *
      * @SWG\Property()
-     * @JMS\Groups({"updatedBy"})
+     * @JMS\Groups({"UpdatedBy"})
      *
      * @ORM\ManyToOne(targetEntity="App\Entities\User")
      * @ORM\JoinColumns({

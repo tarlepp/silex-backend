@@ -56,7 +56,7 @@ class Book extends Base
      * @var integer
      *
      * @SWG\Property()
-     * @JMS\Groups({"default"})
+     * @JMS\Groups({"Default", "Books", "Book", "BookId"})
      *
      * @ORM\Column(
      *      name="id",
@@ -74,7 +74,7 @@ class Book extends Base
      * @var string
      *
      * @SWG\Property()
-     * @JMS\Groups({"default"})
+     * @JMS\Groups({"Default", "Book"})
      *
      * @ORM\Column(
      *      name="title",
@@ -91,7 +91,7 @@ class Book extends Base
      * @var string
      *
      * @SWG\Property()
-     * @JMS\Groups({"default"})
+     * @JMS\Groups({"Default", "Book"})
      *
      * @ORM\Column(
      *      name="description",
@@ -107,7 +107,7 @@ class Book extends Base
      * @var \DateTime
      *
      * @SWG\Property()
-     * @JMS\Groups({"default"})
+     * @JMS\Groups({"Default", "Book"})
      *
      * @ORM\Column(
      *      name="releaseDate",
@@ -121,7 +121,7 @@ class Book extends Base
      * @var \App\Entities\Author
      *
      * @SWG\Property()
-     * @JMS\Groups({"author"})
+     * @JMS\Groups({"Author", "AuthorId"})
      *
      * @ORM\ManyToOne(
      *      targetEntity="App\Entities\Author",
