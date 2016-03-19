@@ -152,6 +152,8 @@ class User extends Base implements AdvancedUserInterface
     private $email;
 
     /**
+     * Hashed password.
+     *
      * @var string
      *
      * @JMS\Exclude
@@ -165,10 +167,12 @@ class User extends Base implements AdvancedUserInterface
     private $password;
 
     /**
+     * User roles.
+     *
      * @var string
      *
      * @JMS\Accessor(getter="getRoles")
-     * @JMS\Groups({"Roles"})
+     * @JMS\Groups({"Default", "Roles"})
      *
      * @ORM\Column(
      *      name="roles",
@@ -212,6 +216,8 @@ class User extends Base implements AdvancedUserInterface
     }
 
     /**
+     * Getter for firstname.
+     *
      * @return string
      */
     public function getFirstname()
@@ -220,6 +226,8 @@ class User extends Base implements AdvancedUserInterface
     }
 
     /**
+     * Getter for surname.
+     *
      * @return string
      */
     public function getSurname()
@@ -228,6 +236,8 @@ class User extends Base implements AdvancedUserInterface
     }
 
     /**
+     * Getter for email.
+     *
      * @return string
      */
     public function getEmail()
