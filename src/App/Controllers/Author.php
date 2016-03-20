@@ -49,7 +49,7 @@ class Author extends Rest
      */
     public function exposeServices()
     {
-        $this->service = $this->app['author.service'];
+        $this->service = $this->app['service.Author'];
     }
 
     /**
