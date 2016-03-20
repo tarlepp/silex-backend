@@ -6,6 +6,7 @@
  */
 namespace App\Controllers;
 
+// Silex components
 use Silex\Application;
 use Silex\ControllerProviderInterface;
 use Silex\ControllerCollection;
