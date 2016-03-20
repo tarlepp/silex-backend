@@ -212,7 +212,7 @@ abstract class Rest extends Base implements Interfaces\Rest
         }
 
         // Create or update entity
-        $this->createOrUpdateEntity($entity, $data);
+        $this->persistEntity($entity, $data);
 
         // After callback method call
         if (method_exists($this, 'afterCreate')) {
@@ -249,7 +249,7 @@ abstract class Rest extends Base implements Interfaces\Rest
         }
 
         // Create or update entity
-        $this->createOrUpdateEntity($entity, $data);
+        $this->persistEntity($entity, $data);
 
         // After callback method call
         if (method_exists($this, 'afterUpdate')) {
@@ -398,10 +398,20 @@ abstract class Rest extends Base implements Interfaces\Rest
      *
      * @return  void
      */
-    protected function createOrUpdateEntity(Entity $entity, \stdClass $data)
+    protected function persistEntity(Entity $entity, \stdClass $data)
     {
+        // Specify properties that are not allowed to update by user
+        $ignoreProperties = [
+            'createdAt', 'createdBy',
+            'updatedAt', 'updatedBy',
+        ];
+
         // Iterate given data
         foreach ($data as $property => $value) {
+            if (in_array($property, $ignoreProperties)) {
+                continue;
+            }
+
             // Specify setter method for current property
             $method = sprintf(
                 'set%s',
