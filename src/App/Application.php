@@ -324,7 +324,7 @@ class Application extends SilexApplication
             new TimestampableSubscriber(
                 new ClassAnalyzer(),
                 false,
-                'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable',
+                'App\Doctrine\Behaviours\Timestampable',
                 'datetime'
             )
         );
@@ -334,7 +334,7 @@ class Application extends SilexApplication
             new BlameableSubscriber(
                 new ClassAnalyzer(),
                 false,
-                'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
+                'App\Doctrine\Behaviours\Blameable',
                 $userCallback,
                 '\App\Entities\User'
             )
