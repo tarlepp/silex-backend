@@ -6,8 +6,8 @@
  */
 namespace App\Services;
 
-// Silex components
-use Silex\Application;
+// Application components
+use App\Application;
 
 /**
  * Class Loader
@@ -22,16 +22,6 @@ class Loader
      * @var Application
      */
     protected $app;
-
-    /**
-     * Services to expose across the application.
-     *
-     * @var array
-     */
-    protected $services = [
-        'author.service'    => 'Author',
-        'book.service'      => 'Book',
-    ];
 
     /**
      * Loader constructor.
@@ -50,14 +40,60 @@ class Loader
      */
     public function bindServices()
     {
-        foreach ($this->services as $service => $class) {
-            $share = function() use ($class) {
-                $className = '\\App\\Services\\' . $class;
-
-                return new $className($this->app['db'], $this->app['orm.em'], $this->app['validator']);
+        foreach ($this->getRestServices() as $service) {
+            /**
+             * Lambda callback function to create new REST service.
+             *
+             * @return  \App\Services\Interfaces\Rest
+             */
+            $share = function() use ($service) {
+                return new $service->class($this->app['db'], $this->app['orm.em'], $this->app['validator']);
             };
 
-            $this->app[$service] = $this->app->share($share);
+            // Register and share service to whole application
+            $this->app[$service->name] = $this->app->share($share);
         }
+    }
+
+    /**
+     * Helper method to get all REST services.
+     *
+     * @todo Build a cache for this!
+     *
+     * @return  array
+     */
+    protected function getRestServices()
+    {
+        /**
+         * Lambda function to get all service classes that exists in application.
+         *
+         * @param   string  $file
+         *
+         * @return  null|\stdClass
+         */
+        $iterator = function($file) {
+            // Specify service class name with namespace
+            $className = '\\App\\Services\\' . str_replace('.php', '', basename($file));
+
+            // Get reflection about controller class
+            $reflectionClass = new \ReflectionClass($className);
+
+            if (!$reflectionClass->isAbstract() &&
+                $reflectionClass->implementsInterface('\\App\\Services\\Interfaces\\Rest')
+            ) {
+                $bits = explode('\\', $reflectionClass->getName());
+
+                // Create output
+                $output = new \stdClass();
+                $output->class = $reflectionClass->getName();
+                $output->name = 'service.' . end($bits);
+
+                return $output;
+            }
+
+            return null;
+        };
+
+        return array_filter(array_map($iterator, glob($this->app->getRootDir() . 'src/App/Services/*.php')));
     }
 }
