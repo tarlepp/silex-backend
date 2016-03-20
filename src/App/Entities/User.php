@@ -6,6 +6,9 @@
  */
 namespace App\Entities;
 
+// Application components
+use App\Doctrine\Behaviours as ORMBehaviors;
+
 // Symfony components
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -16,7 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
 // 3rd party components
 use Swagger\Annotations as SWG;
 use JMS\Serializer\Annotation as JMS;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Class User
@@ -38,7 +40,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  *          "surname": "Administrator",
  *          "email": "arnold@foobar.com",
  *      },
- * )
+ *  )
  *
  * @ORM\Table(
  *      name="user",
@@ -62,8 +64,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 class User extends Base implements AdvancedUserInterface
 {
     // Traits
-    use ORMBehaviors\Blameable\Blameable;
-    use ORMBehaviors\Timestampable\Timestampable;
+    use ORMBehaviors\Blameable;
+    use ORMBehaviors\Timestampable;
 
     /**
      * User ID

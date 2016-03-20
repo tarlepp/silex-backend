@@ -6,6 +6,9 @@
  */
 namespace App\Entities;
 
+// Application components
+use App\Doctrine\Behaviours as ORMBehaviors;
+
 // Symfony components
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,7 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
 // 3rd party components
 use Swagger\Annotations as SWG;
 use JMS\Serializer\Annotation as JMS;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Class Book
@@ -31,7 +33,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  *          "releaseDate",
  *          "author"
  *      },
- * )
+ *  )
  *
  * @ORM\Table(
  *      name="book"
@@ -47,8 +49,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 class Book extends Base
 {
     // Traits
-    use ORMBehaviors\Blameable\Blameable;
-    use ORMBehaviors\Timestampable\Timestampable;
+    use ORMBehaviors\Blameable;
+    use ORMBehaviors\Timestampable;
 
     /**
      * Book ID

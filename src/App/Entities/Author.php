@@ -6,6 +6,9 @@
  */
 namespace App\Entities;
 
+// Application components
+use App\Doctrine\Behaviours as ORMBehaviors;
+
 // Symfony components
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,7 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
 // 3rd party components
 use Swagger\Annotations as SWG;
 use JMS\Serializer\Annotation as JMS;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Class Author
@@ -34,7 +36,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  *          "name": "J. R. R. Tolkien",
  *          "description": "John Ronald Reuel Tolkien, CBE (/ˈtɒlkiːn/ tol-keen; 3 January 1892 – 2 September 1973)",
  *      },
- * )
+ *  )
  *
  * @ORM\Table(
  *      name="author"
@@ -50,8 +52,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 class Author extends Base
 {
     // Traits
-    use ORMBehaviors\Blameable\Blameable;
-    use ORMBehaviors\Timestampable\Timestampable;
+    use ORMBehaviors\Blameable;
+    use ORMBehaviors\Timestampable;
 
     /**
      * Author ID
