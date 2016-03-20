@@ -55,6 +55,23 @@ abstract class Rest extends Base implements Interfaces\Rest
     }
 
     /**
+     * Method to register all routes for current controller. Note that these are the default routes that are attached
+     * to each of controllers which extend this abstract base controller.
+     *
+     * If you want to disable some of these just add this method to your controller and make necessary changes.
+     *
+     * @return void
+     */
+    public function registerRoutes()
+    {
+        $this->controllers->get('/', [$this, 'find']);
+        $this->controllers->get('/{id}', [$this, 'findOne']);
+        $this->controllers->post('/', [$this, 'create']);
+        $this->controllers->put('/{id}', [$this, 'update']);
+        $this->controllers->delete('/{id}', [$this, 'delete']);
+    }
+
+    /**
      * Returns all specified entities from database as an array of entity objects.
      *
      * @param   Request $request
