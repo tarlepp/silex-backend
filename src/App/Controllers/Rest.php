@@ -339,6 +339,10 @@ abstract class Rest extends Base implements Interfaces\Rest
         }
 
         // Create context and set used groups
-        return SerializationContext::create()->setGroups(array_merge([$defaultGroup], $populate));
+        $context = SerializationContext::create();
+        $context->setGroups(array_merge([$defaultGroup], $populate));
+        $context->setSerializeNull(true);
+
+        return $context;
     }
 }
