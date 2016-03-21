@@ -7,7 +7,6 @@
 namespace App\Controllers;
 
 // Symfony components
-use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -52,27 +51,12 @@ class Index extends Base
      * This is just for testing what ever you might wanna test. Note that this route is public so don't ever commit
      * your changes to this :D
      *
-     * @param Request $request
+     * @param   Request $request
      *
-     * @return string
+     * @return  string
      */
     public function test(Request $request)
     {
-        $criteria = $request->get('criteria', []);
-        $orderBy = $request->get('orderBy', null);
-        $limit = $request->get('limit', null);
-        $offset = $request->get('offset', null);
-        $populate = $request->get('populate', []);
-
-        $assocs = $this->app['author.service']->getAssociations();
-
-        $data = $this->app['author.service']->find($criteria, $orderBy, $limit, $offset);
-
-        $context = SerializationContext::create()->setGroups(array_merge(['default'], array_intersect($assocs, $populate)));
-
-        $context->setSerializeNull(true);
-
-        return $this->app["serializer"]->serialize($data, 'json', $context);
-        //return $this->app["serializer"]->serialize($data, 'json');
+        return $this->app["serializer"]->serialize($request->query->all(), 'json');
     }
 }
