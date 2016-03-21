@@ -18,7 +18,6 @@ Simple JSON API which is build on top of [Silex](http://silex.sensiolabs.org/) f
 - [ ] 
 - [ ] 
 
-
 ## Requirements
 * PHP 5.5.x
 * Apache / nginx / IIS / Lighttpd see configuration information [here](http://silex.sensiolabs.org/doc/web_servers.html) 
@@ -37,8 +36,25 @@ $ php composer.phar install
 * Create web-server configuration which points to ```web``` folder
 * Ensure that ```var``` folder is writable by web-server user
 
-## Configuration
-TODO
+### Configuration
+Add your ```local.yml``` configuration file to some (or all) following directories:
+ * ```resources/config/common```
+ * ```resources/config/dev```
+ * ```resources/config/prod```
+ * ```resources/config/cli-dev```
+ * ```resources/config/cli-prod```
+
+Within this file you can override any environment or common configuration value as you like. Basically first thing to
+do is define _your_ database settings - without these you can't basically do anything...
+
+### Database initialization
+This can be done with following command:
+```
+./bin/console migrations:migrate
+```
+
+### Possible "failures"
+* Missing ```var``` directory? Create it and check that it has proper write access in other words just do ```chmod 777 var``` 
 
 ## Nice to know things
 ```GET http://yoururl/_dump```
