@@ -96,6 +96,17 @@ interface Rest
     public function findOne($id);
 
     /**
+     * Generic findOneBy method to return single item from database by given criteria. Return value is single entity
+     * from specified repository or null if entity was not found.
+     *
+     * @param   array       $criteria
+     * @param   null|array  $orderBy
+     *
+     * @return  null|Entity
+     */
+    public function findOneBy(array $criteria, array $orderBy = null);
+
+    /**
      * Generic method to create new item (entity) to specified database repository. Return value is created entity for
      * specified repository.
      *
@@ -170,6 +181,23 @@ interface Rest
      * @param   null|Entity $entity
      */
     public function afterFindOne(&$id, Entity $entity = null);
+
+    /**
+     * Before lifecycle method for findOneBy method.
+     *
+     * @param   array       $criteria
+     * @param   null|array  $orderBy
+     */
+    public function beforeFindOneBy(array &$criteria, array &$orderBy = null);
+
+    /**
+     * After lifecycle method for findOneBy method.
+     *
+     * @param   array       $criteria
+     * @param   null|array  $orderBy
+     * @param   null|Entity $entity
+     */
+    public function afterFindOneBy(array &$criteria, array &$orderBy = null,  Entity $entity = null);
 
     /**
      * Before lifecycle method for create method.
