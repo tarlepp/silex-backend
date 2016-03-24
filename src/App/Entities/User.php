@@ -303,6 +303,24 @@ class User extends Base implements AdvancedUserInterface
     }
 
     /**
+     * Getter for login data. This data is going to be the payload for JWT.
+     *
+     * @return  array
+     */
+    function getLoginData()
+    {
+        return [
+            'id'            => $this->getId(),
+            'identifier'    => $this->getIdentifier(),
+            'username'      => $this->getUsername(),
+            'firstname'     => $this->getFirstname(),
+            'surname'       => $this->getSurname(),
+            'email'         => $this->getEmail(),
+            'roles'         => $this->getRoles(),
+        ];
+    }
+
+    /**
      * Removes sensitive data from the user.
      *
      * This is important if, at any given point, sensitive information like

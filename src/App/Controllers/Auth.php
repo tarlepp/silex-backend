@@ -109,11 +109,8 @@ class Auth extends Base
             $user = $this->app['users']->loadUserByUsername($login->getIdentifier());
 
             if ($user->verifyPassword($login->getPassword())) {
-                $userData = $user->jsonSerialize();
-                $userData['identifier'] = $user->getIdentifier();
-
                 // Return token response
-                return $this->app->json(['token' => $this->app['security.jwt.encoder']->encode($userData)]);
+                return $this->app->json(['token' => $this->app['security.jwt.encoder']->encode($user->getLoginData())]);
             }
         } catch (\Exception $error) {
             throw new HttpException(401, 'Unauthorized', $error);
