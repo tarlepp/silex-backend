@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f3ab27fc6e90f9e2d4160c39d63454f0",
-    "content-hash": "dd2de589dd255384825c596eef4ad806",
+    "hash": "d7467cfdf8b1f76d2cd64e660b3760d2",
+    "content-hash": "f99274359a4fcc9e08dad6f77915840b",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1675,16 +1675,16 @@
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "0.1.6",
+            "version": "0.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "60fe23665f018d608a7113acc9ab17a69fb87871"
+                "reference": "c3a754741681739030adefe914b57c448e58a28a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/60fe23665f018d608a7113acc9ab17a69fb87871",
-                "reference": "60fe23665f018d608a7113acc9ab17a69fb87871",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/c3a754741681739030adefe914b57c448e58a28a",
+                "reference": "c3a754741681739030adefe914b57c448e58a28a",
                 "shasum": ""
             },
             "require": {
@@ -1718,7 +1718,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2015-12-02 08:05:55"
+            "time": "2016-03-19 17:53:07"
         },
         {
             "name": "phpoption/phpoption",
@@ -3348,7 +3348,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "5.5.*"
+        "php": "^5.5"
     },
     "platform-dev": []
 }
